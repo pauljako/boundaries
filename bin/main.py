@@ -6,6 +6,7 @@ import json
 
 BND_DIR = os.path.realpath(os.path.expanduser("~/boundaries/bin"))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
+EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
 
 
 def remove(filename):
@@ -72,7 +73,7 @@ def install(filepath):
         custom_install_command_success = 0
     if custom_install_command_success == 0:
         print(f"{pkg_name} installed succesfully.")
-        with open(os.path.expanduser(f"~/.local/share/applications/{pkg_name}.desktop"), "w") as f:
+        with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
             d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(packagefolder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={packagefolder}"
             f.write(d)
     else:
