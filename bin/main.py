@@ -30,7 +30,7 @@ def run(filename, args):
 
 
 def install(filepath):
-    filepath = os.path.join(os.getcwd(), filepath)
+    filepath = os.path.realpath(os.path.join(os.getcwd(), filepath))
     if not os.path.isdir(filepath):
         pkg = True
         packagefolder = os.path.join("/tmp", "boundaries")
@@ -50,7 +50,7 @@ def install(filepath):
     if pkg:
         shutil.move(packagefolder, os.path.join(APP_DIR, pkg_name))
     else:
-        shutil.copy(packagefolder, os.path.join(APP_DIR, pkg_name))
+        shutil.copytree(packagefolder, os.path.join(APP_DIR, pkg_name))
     packagefolder = os.path.join(APP_DIR, pkg_name)
     os.chdir(packagefolder)
     os.system("pwd")
