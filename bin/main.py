@@ -60,12 +60,9 @@ def install(filepath):
             info = json.loads(f.read())
     else:
         print(f"Error: Cannot find {infofile}")
-    try:
-        custom_install_command = info["commands"]["install"]
-        custom_install_command_available = True
-    except:
-        custom_install_command_available = False
+    custom_install_command_available = "install" in info["commands"]
     if custom_install_command_available:
+        custom_install_command = info["commands"]["install"]
         print(f"Running Comand \"{custom_install_command}\"...")
         custom_install_command_success = os.system(custom_install_command)
     else:
@@ -77,7 +74,7 @@ def install(filepath):
             d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(packagefolder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={packagefolder}"
             f.write(d)
     else:
-        print(f"{pkg_name} was not installed succesfully.")
+        print(f"{pkg_name} was not installed successfully.")
 
 
 if __name__ == '__main__':
