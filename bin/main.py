@@ -14,10 +14,10 @@ def remove(filename):
 
 
 def run(filename, args):
-    packagefolder = os.path.join(APP_DIR, filename)
-    os.chdir(packagefolder)
+    package_folder = os.path.join(APP_DIR, filename)
+    os.chdir(package_folder)
     os.system("pwd")
-    infofile = os.path.join(packagefolder, "boundaries.json")
+    infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
             info = json.loads(f.read())
@@ -33,28 +33,37 @@ def install(filepath):
     filepath = os.path.realpath(os.path.join(os.getcwd(), filepath))
     if not os.path.isdir(filepath):
         pkg = True
-        packagefolder = os.path.join("/tmp", "boundaries")
+        package_folder = os.path.join("/tmp", "boundaries")
         print(f"Unpacking {filepath}...")
-        shutil.unpack_archive(filepath, packagefolder)
-        packagefolder = os.path.join(packagefolder, os.listdir(packagefolder)[0])
+        shutil.unpack_archive(filepath, package_folder)
+        for f in os.listdir(package_folder):
+            if f == "boundaries.json":
+                break
+            elif os.path.isdir(os.path.join(package_folder, f)):
+                package_folder = os.path.join(package_folder, f)
     else:
         pkg = False
-        packagefolder = filepath
-    infofile = os.path.join(packagefolder, "boundaries.json")
+        package_folder = filepath
+    infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
             info = json.loads(f.read())
     else:
         print(f"Error: Cannot find {infofile}")
-    pkg_name = info["name"]
-    if pkg:
-        shutil.move(packagefolder, os.path.join(APP_DIR, pkg_name))
+        return False
+    if "name" in info and "command" in info and "run" in info["command"]:
+        pkg_name = info["name"]
     else:
-        shutil.copytree(packagefolder, os.path.join(APP_DIR, pkg_name))
-    packagefolder = os.path.join(APP_DIR, pkg_name)
-    os.chdir(packagefolder)
+        print("The boundaries.json file did not provide enough necessary information")
+        return False
+    if pkg:
+        shutil.move(package_folder, os.path.join(APP_DIR, pkg_name))
+    else:
+        shutil.copytree(package_folder, os.path.join(APP_DIR, pkg_name))
+    package_folder = os.path.join(APP_DIR, pkg_name)
+    os.chdir(package_folder)
     os.system("pwd")
-    infofile = os.path.join(packagefolder, "boundaries.json")
+    infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
             info = json.loads(f.read())
@@ -71,10 +80,12 @@ def install(filepath):
     if custom_install_command_success == 0:
         print(f"{pkg_name} installed succesfully.")
         with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
-            d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(packagefolder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={packagefolder}"
+            d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
             f.write(d)
+        return True
     else:
-        print(f"{pkg_name} was not installed successfully.")
+        print(f"Install Command failed")
+        return False
 
 
 if __name__ == '__main__':
@@ -84,7 +95,10 @@ if __name__ == '__main__':
         print("Error: No Argument given")
         action = ""
     if action == "--install" or action == "-i":
-        install(sys.argv[2])
+        if install(sys.argv[2]):
+            print(f"{sys.argv[2]} was installed successfully")
+        else:
+            print(f"{sys.argv[2]} was not installed successfully")
     elif action == "--run" or action == "-r":
         run(sys.argv[2], sys.argv[3:])
     elif action == "--remove":
