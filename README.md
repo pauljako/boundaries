@@ -2,6 +2,8 @@
 
 Yet another useless Package Manager for Linux. It uses archives of the application and a json File containing the information that boundaries needs.
 
+<h6>Note: I did not managed to get any Programms working on NixOS</h6>
+
 # Usage
 For installing an Application just run "boundaries -i <path to archive or dir>" or "boundaries --install <path to archive or dir>".
 
