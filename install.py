@@ -1,0 +1,34 @@
+#!/bin/python3
+import os
+import shutil
+import sys
+
+
+def main():
+    if not sys.platform == "linux":
+        answer = input("Your Device is not Supported. Continue anyway? (y/N) ")
+        if not answer == "y":
+            return False
+    if os.path.exists(os.path.expanduser("~/boundaries")) and os.path.isdir(os.path.expanduser("~/boundaries")):
+        answer = input("The Directory ~/boundaries already exists. Remove and Continue? (Y/n) ")
+        if answer == "n":
+            return False
+        print("Removing boundaries directory")
+        shutil.rmtree(os.path.expanduser("~/boundaries"))
+    print("Making sure you have git installed")
+    if shutil.which("git") is None:
+        print("It looks like git is not installed")
+        return False
+    print("Cloning boundaries...")
+    os.chdir(os.path.expanduser("~"))
+    if not os.system("git clone https://github.com/pauljako/boundaries.git") == 0 and os.path.exists(
+            os.path.expanduser("~/boundaries")) and os.path.isdir(os.path.expanduser("~/boundaries")):
+        print("Cloning failed")
+        return False
+    os.chdir(os.path.expanduser("~/boundaries"))
+    return True
+
+
+if __name__ == "__main__":
+    if not main():
+        print("Boundaries was not installed.")
