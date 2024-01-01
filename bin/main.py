@@ -23,7 +23,7 @@ def run(filename, args):
             info = json.loads(f.read())
     else:
         print(f"Error: Cannot find {infofile}")
-    run_command = info["commands"]["run"]
+    run_command = info["command"]["run"]
     for a in args:
         run_command = run_command + " " + a
     os.system(run_command)
@@ -69,9 +69,9 @@ def install(filepath):
             info = json.loads(f.read())
     else:
         print(f"Error: Cannot find {infofile}")
-    custom_install_command_available = "install" in info["commands"]
+    custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
-        custom_install_command = info["commands"]["install"]
+        custom_install_command = info["command"]["install"]
         print(f"Running Comand \"{custom_install_command}\"...")
         custom_install_command_success = os.system(custom_install_command)
     else:
