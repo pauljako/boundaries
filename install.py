@@ -6,7 +6,7 @@ import sys
 
 def main():
     if not sys.platform == "linux":
-        answer = input("Your Device is not Supported. Continue anyway? (y/N) ")
+        answer = input("Your OS is not Supported. Continue anyway? (y/N) ")
         if not answer == "y":
             return False
     if os.path.exists(os.path.expanduser("~/boundaries")) and os.path.isdir(os.path.expanduser("~/boundaries")):
