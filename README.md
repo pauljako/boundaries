@@ -26,3 +26,7 @@ Or just run one of these commands:
 `apt install git curl python3`
 - Fedora:
 `dnf install git curl python3`
+
+### Step 2:
+Run the installer using the following command:
+`curl https://raw.githubusercontent.com/pauljako/boundaries/main/install.py | python3`
