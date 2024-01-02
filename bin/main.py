@@ -29,7 +29,11 @@ def listpkgs():
 
 
 def remove(filename):
+    print("Removing Files")
     shutil.rmtree(os.path.join(APP_DIR, filename))
+    if os.path.exists(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop")):
+        print("Removing Desktop Entry")
+        os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
 
 
 def run(filename, args):
