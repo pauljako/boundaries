@@ -32,3 +32,6 @@ Or just run one of these commands:
 ### Step 2:
 Run the installer using the following command (one line):
 `curl https://raw.githubusercontent.com/pauljako/boundaries/main/install.py | python3`
+
+# Credits
+Even though I am (currently) the only contributer, I still want to Thank Google and Stack Overflow.
