@@ -29,11 +29,15 @@ def listpkgs():
 
 
 def remove(filename):
-    print("Removing Files")
+    info = getpkginfo(filename)
+    print(f"Removing Files of {info['name']}")
     shutil.rmtree(os.path.join(APP_DIR, filename))
     if os.path.exists(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop")):
         print("Removing Desktop Entry")
         os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
+    if "bin" in info:
+        print("Removing Command")
+        os.remove(os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}"))
 
 
 def run(filename, args):
@@ -97,13 +101,22 @@ def install(filepath):
         print("No Command to Run.")
         custom_install_command_success = 0
     if custom_install_command_success == 0:
-        print(f"{pkg_name} installed succesfully.")
+        print(f"{pkg_name} installed successfully.")
         if "icon" in info:
+            print("Creating Desktop Entry")
             with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
                 d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
                 f.write(d)
         else:
             print("No Icon. Not creating a .desktop File.")
+        if "bin" in info:
+            print("Creating Command")
+            binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
+            with open(binpath, "w") as f:
+                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{__file__} -r \"{pkg_name}\" $i'
+                f.write(d)
+            print("Making Command Executable")
+            os.system(f'chmod +x {binpath}')
         return True
     else:
         print(f"Install Command failed")
