@@ -6,11 +6,19 @@ import sys
 
 def main():
     if not sys.platform == "linux":
-        answer = input("Your OS is not Supported. Continue anyway? (y/N) ")
+        try:
+            answer = input("Your OS is not Supported. Continue anyway? (y/N) ")
+        except EOFError:
+            print("EOFError When reading line. stdin might not be accessible")
+            return False
         if not answer == "y":
             return False
     if os.path.exists(os.path.expanduser("~/boundaries")) and os.path.isdir(os.path.expanduser("~/boundaries")):
-        answer = input("The Directory ~/boundaries already exists. Remove and Continue? (Y/n) ")
+        try:
+            answer = input("The Directory ~/boundaries already exists. Remove and Continue? (Y/n) ")
+        except EOFError:
+            print("EOFError When reading line. stdin might not be accessible")
+            return False
         if answer == "n":
             return False
         print("Removing boundaries directory")
