@@ -9,20 +9,35 @@ APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
 
 
+def getpkginfo(packagename: str) -> dict | None:
+    pkgpath = os.path.join(APP_DIR, packagename)
+    pkginfopath = os.path.join(pkgpath, "boundaries.json")
+    if os.path.isdir(pkgpath) and os.path.exists(pkginfopath):
+        with open(pkginfopath, "rb") as f:
+            info = json.loads(f.read())
+        return info
+    else:
+        return None
+
+
+def listpkgs():
+    print("Name:")
+    for p in os.listdir(APP_DIR):
+        info = getpkginfo(p)
+        if info is not None and "name" in info:
+            print(info["name"])
+
+
 def remove(filename):
     shutil.rmtree(os.path.join(APP_DIR, filename))
 
 
 def run(filename, args):
+    info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
     os.chdir(package_folder)
-    os.system("pwd")
-    infofile = os.path.join(package_folder, "boundaries.json")
-    if os.path.exists(infofile):
-        with open(infofile, "rb") as f:
-            info = json.loads(f.read())
-    else:
-        print(f"Error: Cannot find {infofile}")
+    if info is None:
+        print(f"Error: Cannot find the boundaries.json file")
     run_command = info["command"]["run"]
     for a in args:
         run_command = run_command + " " + a
@@ -79,9 +94,12 @@ def install(filepath):
         custom_install_command_success = 0
     if custom_install_command_success == 0:
         print(f"{pkg_name} installed succesfully.")
-        with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
-            d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
-            f.write(d)
+        if "icon" in info:
+            with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
+                d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
+                f.write(d)
+        else:
+            print("No Icon. Not creating a .desktop File.")
         return True
     else:
         print(f"Install Command failed")
@@ -103,5 +121,7 @@ if __name__ == '__main__':
         run(sys.argv[2], sys.argv[3:])
     elif action == "--remove":
         remove(sys.argv[2])
+    elif action == "--list":
+        listpkgs()
     else:
         print(f"Error: Invalid Argument \"{action}\"")
