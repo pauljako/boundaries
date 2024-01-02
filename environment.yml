@@ -1,3 +1,0 @@
-name: versioncheck
-dependencies:
-  - pip
