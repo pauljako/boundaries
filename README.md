@@ -5,10 +5,12 @@ Yet another useless Package Manager for Linux. It uses archives of the applicati
 <h6>Note: I did not manage to get any Programs working on NixOS</h6>
 
 # Usage
-For installing an Application just run `boundaries -i <path to archive/dir>` or `boundaries --install <path to archive/dir>`.
-
-For running an Application from the Terminal Run the following command:
-`boundaries -r <app name>` or `boundaries --run <app name>`
+- Installing: `boundaries --install <path to archive/dir>`
+- Installing (short form): `boundaries -i <path to archive/dir>`
+- Running: `boundaries --run <package name>`
+- Running (short form): `boundaries -r <package name>`
+- Listing Installed Packages: `boundaries --list`
+- Uninstalling: `boundaries --remove <package name>`
 
 # Installation
 ### Step 1:
@@ -28,5 +30,5 @@ Or just run one of these commands:
 `dnf install git curl python3`
 
 ### Step 2:
-Run the installer using the following command:
+Run the installer using the following command (one line):
 `curl https://raw.githubusercontent.com/pauljako/boundaries/main/install.py | python3`
