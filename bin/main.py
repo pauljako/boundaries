@@ -130,7 +130,7 @@ def install(filepath):
             print("Creating Command")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
             with open(binpath, "w") as f:
-                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{__file__} -r \"{pkg_name}\" $i'
+                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} -r \"{pkg_name}\" $i'
                 f.write(d)
             print("Making Command Executable")
             os.system(f'chmod +x {binpath}')
