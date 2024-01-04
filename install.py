@@ -2,6 +2,7 @@
 import os
 import shutil
 import sys
+from pathlib import Path
 
 
 def main():
@@ -34,6 +35,9 @@ def main():
         print("Cloning failed")
         return False
     os.chdir(os.path.expanduser("~/boundaries"))
+    Path("exec").makedirs()
+    Path("exec/bin").makedirs()
+    Path("exec/desktop").makedirs()
     return True
 
 
