@@ -25,7 +25,15 @@ def listpkgs():
     for p in os.listdir(APP_DIR):
         info = getpkginfo(p)
         if info is not None and "name" in info:
-            print(info["name"])
+            if "de_name" in info:
+                de_name = info["de_name"]
+            else:
+                de_name = info["name"]
+            if "version" in info:
+                version = f" {str(info['version'])}"
+            else:
+                version = ""
+            print(f"{info['name']} ({de_name}{version})")
 
 
 def remove(filename):
@@ -79,6 +87,11 @@ def install(filepath):
     else:
         print("The boundaries.json file did not provide enough necessary information")
         return False
+    if os.path.exists(os.path.join(APP_DIR, pkg_name)) and os.path.isdir(os.path.join(APP_DIR, pkg_name)):
+        if input("The Package is already installed. Do you want to delete the existing one? (Y/n)") == "n":
+            return False
+        else:
+            remove(pkg_name)
     if pkg:
         shutil.move(package_folder, os.path.join(APP_DIR, pkg_name))
     else:
@@ -101,11 +114,15 @@ def install(filepath):
         print("No Command to Run.")
         custom_install_command_success = 0
     if custom_install_command_success == 0:
+        if "de_name" in info:
+            de_name = info["de_name"]
+        else:
+            de_name = pkg_name
         print(f"{pkg_name} installed successfully.")
         if "icon" in info:
             print("Creating Desktop Entry")
             with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
-                d = f"[Desktop Entry]\nName={pkg_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
+                d = f"[Desktop Entry]\nName={de_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
                 f.write(d)
         else:
             print("No Icon. Not creating a .desktop File.")
