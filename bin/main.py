@@ -122,7 +122,7 @@ def install(filepath):
         if "icon" in info:
             print("Creating Desktop Entry")
             with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
-                d = f"[Desktop Entry]\nName={de_name}\nExec={__file__} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
+                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
                 f.write(d)
         else:
             print("No Icon. Not creating a .desktop File.")
