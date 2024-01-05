@@ -2,13 +2,13 @@
 The boundaries.json file can contain the following options:
 - name: The name of the application (must be lowercase and without spaces) [required]. For Example: pycharm-ce
 - command{
-- run: A Command that will be the main entry for the Programm [required]. For Example: bin/pycharm.sh
+- run: A Command that will be the main entry for the Program [required]. For Example: bin/pycharm.sh
 - install: A Command that will be run during installation. For Example: make
 - }
-- version: Specifies the Version of the Programm
+- version: Specifies the Version of the Program
 - icon: Path to the App icon (A .desktop Entry will not be created without it)
 - de_name: The Desktop Name of the Application  (Can be uppercase and can contain spaces). For Example: PyCharm CE
-- bin: When Specified a Command with the given name will be created to execute the Programm Quicker
+- bin: When Specified a Command with the given name will be created to execute the Program Quicker
 
   # Examples
   ### PyCharm CE 2023.2.1

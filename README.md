@@ -33,7 +33,7 @@ Run the installer using the following command (one line):
 # Status / TODO
 ### Repository
 The Repository is in Development and a boundaries package for downloading and installing Packages using curl will be out soon.
-However due to cost, I will not host an offical repository (yet), but i will really appreciate if someone does.
+However, due to cost, I will not host an official repository (yet), but i will really appreciate if someone does.
 
 ### Gui
 Planned.
@@ -46,20 +46,20 @@ The boundaries.json File is a File that contains all the Information for boundar
 
 The File has to have at least two entries:
 1. name: The name of the package. name cannot contain spaces nor uppercase letters.
-2. command{run}: command is a Dictionary, wich contains commands for certain things. the run command specifies the command that executes the Programm.
-There are many not neccesary other entries. A full list can be found [here](../main/JSONFILE.md)
+2. command{run}: command is a Dictionary, which contains commands for certain things. the run command specifies the command that executes the Program.
+There are many not necessary other entries. A full list can be found [here](../main/JSONFILE.md)
 
 # Working Platforms
 
-| Platform / OS     | Version | Status | Notes
-| ---      | ---       | --- | ---
-| macOS | 14 | Not Working | Many Programms are not Designed for macOS |
-| NixOS | - | Not Working | May Work, but additional tweaking is required|
-| Fedora | 39 |Working | - |
-| Arch Linux | - | Working | - |
-| Ubuntu | - | Untested | Should Work |
-| Debian | - | Untested | Should Work |
-| Raspberry Pi OS | Buster | Working | - |
+| Platform / OS   | Version | Status      | Notes                                          |
+|-----------------|---------|-------------|------------------------------------------------|
+| macOS           | 14      | Not Working | Many Programs are not Designed for macOS       |
+| NixOS           | -       | Not Working | May Work, but additional tweaking is required  |
+| Fedora          | 39      | Working     | -                                              |
+| Arch Linux      | -       | Working     | -                                              |
+| Ubuntu          | -       | Untested    | Should Work                                    |
+| Debian          | -       | Untested    | Should Work                                    |
+| Raspberry Pi OS | Buster  | Working     | -                                              |
 
 #### Please Report any issues
 
@@ -67,4 +67,4 @@ There are many not neccesary other entries. A full list can be found [here](../m
 I am not a native English speaker. Please Report Language Errors as well
 
 # Credits
-Even though I am (currently) the only contributer, I still want to Thank Google and Stack Overflow.
+Even though I am (currently) the only contributor, I still want to Thank Google and Stack Overflow.
