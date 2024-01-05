@@ -39,6 +39,7 @@ def main():
     Path("exec").mkdir()
     Path("exec/bin").mkdir()
     Path("exec/desktop").mkdir()
+    Path("var").mkdir()
     return True
 
 
