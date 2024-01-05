@@ -156,7 +156,7 @@ def install(filepath):
         else:
             print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
         if "bin" in info:
-            print(f"{QUOTE_SYMBOL_DOING}Creating Command{QUOTE_SYMBOL_DOING}")
+            print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
             with open(binpath, "w") as f:
                 d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} -r \"{pkg_name}\" $i'
