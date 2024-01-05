@@ -51,8 +51,8 @@ There are many not neccesary other entries. A full list can be found [here](../m
 
 # Working Platforms
 
-| Platform / OS     | Status | Notes
-| ---      | ---       | ---
+| Platform / OS     | Version | Status | Notes
+| ---      | ---       | --- | ---
 | macOS | Not Working | Many Programms are not Designed for macOS |
 | NixOS | Not Working | May Work, but additional tweaking is required|
 | Fedora | Working | - |
