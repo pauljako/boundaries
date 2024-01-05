@@ -57,7 +57,7 @@ There are many not neccesary other entries. A full list can be found [here](../m
 | NixOS | - | Not Working | May Work, but additional tweaking is required|
 | Fedora | 39 |Working | - |
 | Arch Linux | - | Working | - |
-| Ubunutu | - | Untested | Should Work |
+| Ubuntu | - | Untested | Should Work |
 | Debian | - | Untested | Should Work |
 | Raspberry Pi OS | Buster | Working | - |
 
