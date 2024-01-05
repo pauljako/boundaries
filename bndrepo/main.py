@@ -40,9 +40,9 @@ def update_index_files(silent: bool = False):
             os.rename("temp.json", repo_file_path)
         else:
             if cached:
-                print(f"Warning: Could not Update {r} Repository, using cached")
+                if not silent: print(f"Warning: Could not Update {r} Repository, using cached")
             else:
-                print(f"Error: Could not Update {r} Repository")
+                if not silent: print(f"Error: Could not Update {r} Repository")
                 with open(repo_file_path, "w") as f:
                     f.write("{}")
             os.remove("temp.json")
@@ -92,8 +92,14 @@ if __name__ == '__main__':
     if action == "install":
         dl_pkg = get(sys.argv[2])
         if dl_pkg is None:
-            print(f"Download Error")
-            exit()
+            if input("Download Error. Do you want to Update the Repository? (Y/n) ") != n:
+                update_index_files()
+                dl_pkg = get(sys.argv[2])
+                if dl_pkg is None:
+                    print("Download Error.")
+                    exit()
+            else:
+                exit()
         if boundaries.install(dl_pkg):
             print(f"{sys.argv[2]} was installed successfully")
         else:
