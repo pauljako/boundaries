@@ -53,7 +53,7 @@ There are many not neccesary other entries. A full list can be found [here](../m
 
 | Platform / OS     | Status | Notes
 | ---      | ---       | ---
-| macOS | Working | Many Programms are not Designed for macOS |
+| macOS | Not Working | Many Programms are not Designed for macOS |
 | NixOS | Not Working | May Work, but additional tweaking is required|
 | Fedora | Working | - |
 | Arch Linux | Working | - |
