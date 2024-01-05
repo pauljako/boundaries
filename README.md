@@ -53,13 +53,13 @@ There are many not neccesary other entries. A full list can be found [here](../m
 
 | Platform / OS     | Version | Status | Notes
 | ---      | ---       | --- | ---
-| macOS | Not Working | Many Programms are not Designed for macOS |
-| NixOS | Not Working | May Work, but additional tweaking is required|
-| Fedora | Working | - |
-| Arch Linux | Working | - |
-| Ubunutu | Untested | Should Work |
-| Debian | Untested | Should Work |
-| Raspberry Pi OS | Working | - |
+| macOS | 14 | Not Working | Many Programms are not Designed for macOS |
+| NixOS | - | Not Working | May Work, but additional tweaking is required|
+| Fedora | 39 |Working | - |
+| Arch Linux | - | Working | - |
+| Ubunutu | - | Untested | Should Work |
+| Debian | - | Untested | Should Work |
+| Raspberry Pi OS | Buster | Working | - |
 
 #### Please Report any issues
 
