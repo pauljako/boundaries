@@ -12,6 +12,7 @@ The boundaries.json file can contain the following options:
 
   # Examples
   ### PyCharm CE 2023.2.1
+```json
 {
   "name": "pycharm-ce",
   "command": {
@@ -21,3 +22,4 @@ The boundaries.json file can contain the following options:
   "icon": "bin/pycharm.png",
   "de_name": "PyCharm CE"
 }
+```
