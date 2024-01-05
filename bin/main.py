@@ -4,6 +4,20 @@ import sys
 import shutil
 import json
 
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+QUOTE_SYMBOL = f"{bcolors.OKCYAN}::{bcolors.ENDC}"
 BND_DIR = os.path.realpath(os.path.expanduser("~/boundaries/bin"))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
@@ -38,13 +52,13 @@ def listpkgs():
 
 def remove(filename):
     info = getpkginfo(filename)
-    print(f"Removing Files of {info['name']}")
+    print(f"{QUOTE_SYMBOL}Removing Files of {info['name']}{QUOTE_SYMBOL}")
     shutil.rmtree(os.path.join(APP_DIR, filename))
     if os.path.exists(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop")):
-        print("Removing Desktop Entry")
+        print(f"{QUOTE_SYMBOL}Removing Desktop Entry{QUOTE_SYMBOL}")
         os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
     if "bin" in info:
-        print("Removing Command")
+        print(f"{QUOTE_SYMBOL}Removing Command{QUOTE_SYMBOL}")
         os.remove(os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}"))
 
 
@@ -65,7 +79,7 @@ def install(filepath):
     if not os.path.isdir(filepath):
         pkg = True
         package_folder = os.path.join("/tmp", "boundaries")
-        print(f"Unpacking {filepath}...")
+        print(f"{QUOTE_SYMBOL}Unpacking {filepath}{QUOTE_SYMBOL}")
         shutil.unpack_archive(filepath, package_folder)
         for f in os.listdir(package_folder):
             if f == "boundaries.json":
@@ -108,7 +122,7 @@ def install(filepath):
     custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
         custom_install_command = info["command"]["install"]
-        print(f"Running Comand \"{custom_install_command}\"...")
+        print(f"{QUOTE_SYMBOL}Running Comand \"{custom_install_command}\"{QUOTE_SYMBOL}")
         custom_install_command_success = os.system(custom_install_command)
     else:
         print("No Command to Run.")
@@ -121,9 +135,12 @@ def install(filepath):
         print(f"{pkg_name} installed successfully.")
         if "icon" in info:
             print("Creating Desktop Entry")
-            with open(os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop"), "w") as f:
+            desktop_path = os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop")
+            with open(desktop_path, "w") as f:
                 d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
                 f.write(d)
+            print("Making Desktop Entry Executable")
+            os.system(f'chmod +x {desktop_path}')
         else:
             print("No Icon. Not creating a .desktop File.")
         if "bin" in info:
