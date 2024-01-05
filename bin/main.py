@@ -75,10 +75,11 @@ def run(filename, args):
     package_folder = os.path.join(APP_DIR, filename)
     os.chdir(package_folder)
     if info is None:
-        print(f"Error: Cannot find the boundaries.json file")
+        print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
     run_command = info["command"]["run"]
     for a in args:
         run_command = run_command + " " + a
+    print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
     os.system(run_command)
 
 
@@ -102,15 +103,15 @@ def install(filepath):
         with open(infofile, "rb") as f:
             info = json.loads(f.read())
     else:
-        print(f"Error: Cannot find {infofile}")
+        print(f"{QUOTE_SYMBOL_ERROR}Cannot find {infofile}{QUOTE_SYMBOL_ERROR}")
         return False
     if "name" in info and "command" in info and "run" in info["command"]:
         pkg_name = info["name"]
     else:
-        print("The boundaries.json file did not provide enough necessary information")
+        print(f"{QUOTE_SYMBOL_ERROR}The boundaries.json file did not provide enough necessary information{QUOTE_SYMBOL_ERROR}")
         return False
     if os.path.exists(os.path.join(APP_DIR, pkg_name)) and os.path.isdir(os.path.join(APP_DIR, pkg_name)):
-        if input("The Package is already installed. Do you want to delete the existing one? (Y/n)") == "n":
+        if input(f"{QUOTE_SYMBOL_WARNING}The Package is already installed. Do you want to delete the existing one? (Y/n) ") == "n":
             return False
         else:
             remove(pkg_name, True)
@@ -126,7 +127,8 @@ def install(filepath):
         with open(infofile, "rb") as f:
             info = json.loads(f.read())
     else:
-        print(f"Error: Cannot find {infofile}")
+        print(f"{QUOTE_SYMBOL_ERROR}Cannot find {infofile}{QUOTE_SYMBOL_ERROR}")
+        return False
     if not os.path.exists(os.path.join(VAR_DIR, pkg_name)):
         print(f"{QUOTE_SYMBOL_DOING}Creating Data Directory{QUOTE_SYMBOL_DOING}")
         pathlib.Path(os.path.join(VAR_DIR, pkg_name)).mkdir()
