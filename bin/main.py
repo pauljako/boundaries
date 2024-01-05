@@ -1,5 +1,6 @@
 #!/bin/python3
 import os
+import pathlib
 import sys
 import shutil
 import json
@@ -17,10 +18,14 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-QUOTE_SYMBOL = f"{bcolors.OKCYAN}::{bcolors.ENDC}"
+QUOTE_SYMBOL_DOING = f"{bcolors.OKCYAN}::{bcolors.ENDC}"
+QUOTE_SYMBOL_WARNING = f"{bcolors.WARNING}::{bcolors.ENDC}"
+QUOTE_SYMBOL_INFO = f"{bcolors.OKGREEN}::{bcolors.ENDC}"
+QUOTE_SYMBOL_ERROR = f"{bcolors.FAIL}::{bcolors.ENDC}"
 BND_DIR = os.path.realpath(os.path.expanduser("~/boundaries/bin"))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
+VAR_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "var"))
 
 
 def getpkginfo(packagename: str) -> dict | None:
@@ -50,15 +55,18 @@ def listpkgs():
             print(f"{info['name']} ({de_name}{version})")
 
 
-def remove(filename):
+def remove(filename, keep_data=False):
     info = getpkginfo(filename)
-    print(f"{QUOTE_SYMBOL}Removing Files of {info['name']}{QUOTE_SYMBOL}")
+    print(f"{QUOTE_SYMBOL_DOING}Removing Files of {info['name']}{QUOTE_SYMBOL_DOING}")
     shutil.rmtree(os.path.join(APP_DIR, filename))
+    if not keep_data:
+        print(f"{QUOTE_SYMBOL_DOING}Removing Data of {info['name']}{QUOTE_SYMBOL_DOING}")
+        shutil.rmtree(os.path.join(VAR_DIR, filename))
     if os.path.exists(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop")):
-        print(f"{QUOTE_SYMBOL}Removing Desktop Entry{QUOTE_SYMBOL}")
+        print(f"{QUOTE_SYMBOL_DOING}Removing Desktop Entry{QUOTE_SYMBOL_DOING}")
         os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
     if "bin" in info:
-        print(f"{QUOTE_SYMBOL}Removing Command{QUOTE_SYMBOL}")
+        print(f"{QUOTE_SYMBOL_DOING}Removing Command{QUOTE_SYMBOL_DOING}")
         os.remove(os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}"))
 
 
@@ -79,7 +87,7 @@ def install(filepath):
     if not os.path.isdir(filepath):
         pkg = True
         package_folder = os.path.join("/tmp", "boundaries")
-        print(f"{QUOTE_SYMBOL}Unpacking {filepath}{QUOTE_SYMBOL}")
+        print(f"{QUOTE_SYMBOL_DOING}Unpacking {filepath}{QUOTE_SYMBOL_DOING}")
         shutil.unpack_archive(filepath, package_folder)
         for f in os.listdir(package_folder):
             if f == "boundaries.json":
@@ -105,7 +113,7 @@ def install(filepath):
         if input("The Package is already installed. Do you want to delete the existing one? (Y/n)") == "n":
             return False
         else:
-            remove(pkg_name)
+            remove(pkg_name, True)
     if pkg:
         shutil.move(package_folder, os.path.join(APP_DIR, pkg_name))
     else:
@@ -119,41 +127,44 @@ def install(filepath):
             info = json.loads(f.read())
     else:
         print(f"Error: Cannot find {infofile}")
+    if not os.path.exists(os.path.join(VAR_DIR, pkg_name)):
+        print(f"{QUOTE_SYMBOL_DOING}Creating Data Directory{QUOTE_SYMBOL_DOING}")
+        pathlib.Path(os.path.join(VAR_DIR, pkg_name)).mkdir()
     custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
         custom_install_command = info["command"]["install"]
-        print(f"{QUOTE_SYMBOL}Running Comand \"{custom_install_command}\"{QUOTE_SYMBOL}")
+        print(f"{QUOTE_SYMBOL_DOING}Running Command \"{custom_install_command}\"{QUOTE_SYMBOL_DOING}")
         custom_install_command_success = os.system(custom_install_command)
     else:
-        print("No Command to Run.")
+        print(f"{QUOTE_SYMBOL_INFO}No Command to Run.{QUOTE_SYMBOL_INFO}")
         custom_install_command_success = 0
     if custom_install_command_success == 0:
         if "de_name" in info:
             de_name = info["de_name"]
         else:
             de_name = pkg_name
-        print(f"{pkg_name} installed successfully.")
         if "icon" in info:
-            print("Creating Desktop Entry")
+            print(f"{QUOTE_SYMBOL_DOING}Creating Desktop Entry{QUOTE_SYMBOL_DOING}")
             desktop_path = os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop")
             with open(desktop_path, "w") as f:
                 d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
                 f.write(d)
-            print("Making Desktop Entry Executable")
+            print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {desktop_path}')
         else:
-            print("No Icon. Not creating a .desktop File.")
+            print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
         if "bin" in info:
-            print("Creating Command")
+            print(f"{QUOTE_SYMBOL_DOING}Creating Command{QUOTE_SYMBOL_DOING}")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
             with open(binpath, "w") as f:
                 d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} -r \"{pkg_name}\" $i'
                 f.write(d)
-            print("Making Command Executable")
+            print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {binpath}')
+        print(f"{QUOTE_SYMBOL_INFO}{pkg_name} installed successfully.{QUOTE_SYMBOL_INFO}")
         return True
     else:
-        print(f"Install Command failed")
+        print(f"{QUOTE_SYMBOL_ERROR}Install Command failed{QUOTE_SYMBOL_ERROR}")
         return False
 
 
@@ -161,13 +172,13 @@ if __name__ == '__main__':
     try:
         action = sys.argv[1]
     except:
-        print("Error: No Argument given")
+        print(f"{QUOTE_SYMBOL_ERROR}No Argument given{QUOTE_SYMBOL_ERROR}")
         action = ""
     if action == "--install" or action == "-i":
         if install(sys.argv[2]):
-            print(f"{sys.argv[2]} was installed successfully")
+            print(f"{QUOTE_SYMBOL_INFO}{sys.argv[2]} was installed successfully{QUOTE_SYMBOL_INFO}")
         else:
-            print(f"{sys.argv[2]} was not installed successfully")
+            print(f"{QUOTE_SYMBOL_ERROR}{sys.argv[2]} was not installed successfully{QUOTE_SYMBOL_ERROR}")
     elif action == "--run" or action == "-r":
         run(sys.argv[2], sys.argv[3:])
     elif action == "--remove":
@@ -175,4 +186,4 @@ if __name__ == '__main__':
     elif action == "--list":
         listpkgs()
     else:
-        print(f"Error: Invalid Argument \"{action}\"")
+        print(f"{QUOTE_SYMBOL_ERROR}Invalid Argument \"{action}\"{QUOTE_SYMBOL_ERROR}")
