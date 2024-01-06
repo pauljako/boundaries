@@ -73,6 +73,7 @@ def remove(filename, keep_data=False):
 def run(filename, args):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
+    org_dir = os.getcwd()
     os.chdir(package_folder)
     if info is None:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
