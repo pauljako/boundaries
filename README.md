@@ -16,7 +16,7 @@ Install the following dependencies:
 
 - git
 - curl
-- python3 (3.8+)
+- python3 (3.7+)
 
 Or just run one of these commands:
 
