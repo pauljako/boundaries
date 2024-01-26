@@ -6,7 +6,7 @@ import shutil
 import json
 
 
-class bcolors:
+class Colors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -18,10 +18,10 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-QUOTE_SYMBOL_DOING = f"{bcolors.OKCYAN}::{bcolors.ENDC}"
-QUOTE_SYMBOL_WARNING = f"{bcolors.WARNING}::{bcolors.ENDC}"
-QUOTE_SYMBOL_INFO = f"{bcolors.OKGREEN}::{bcolors.ENDC}"
-QUOTE_SYMBOL_ERROR = f"{bcolors.FAIL}::{bcolors.ENDC}"
+QUOTE_SYMBOL_DOING = f"{Colors.OKCYAN}::{Colors.ENDC}"
+QUOTE_SYMBOL_WARNING = f"{Colors.WARNING}::{Colors.ENDC}"
+QUOTE_SYMBOL_INFO = f"{Colors.OKGREEN}::{Colors.ENDC}"
+QUOTE_SYMBOL_ERROR = f"{Colors.FAIL}::{Colors.ENDC}"
 BND_DIR = os.path.realpath(os.path.expanduser("~/boundaries/bin"))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
@@ -172,21 +172,33 @@ def install(filepath):
 
 
 if __name__ == '__main__':
-    try:
+    if len(sys.argv) > 1:
         action = sys.argv[1]
-    except:
+    else:
         print(f"{QUOTE_SYMBOL_ERROR}No Argument given{QUOTE_SYMBOL_ERROR}")
-        action = ""
+        exit()
     if action == "--install" or action == "-i":
+        if len(sys.argv) != 3:
+            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 1 Argument{QUOTE_SYMBOL_ERROR}")
+            exit()
         if install(sys.argv[2]):
             print(f"{QUOTE_SYMBOL_INFO}{sys.argv[2]} was installed successfully{QUOTE_SYMBOL_INFO}")
         else:
             print(f"{QUOTE_SYMBOL_ERROR}{sys.argv[2]} was not installed successfully{QUOTE_SYMBOL_ERROR}")
     elif action == "--run" or action == "-r":
+        if len(sys.argv) < 3:
+            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires at least 1 Argument{QUOTE_SYMBOL_ERROR}")
+            exit()
         run(sys.argv[2], sys.argv[3:])
     elif action == "--remove":
+        if len(sys.argv) != 3:
+            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 1 Argument{QUOTE_SYMBOL_ERROR}")
+            exit()
         remove(sys.argv[2])
     elif action == "--list":
+        if len(sys.argv) != 2:
+            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 0 Arguments{QUOTE_SYMBOL_ERROR}")
+            exit()
         listpkgs()
     else:
         print(f"{QUOTE_SYMBOL_ERROR}Invalid Argument \"{action}\"{QUOTE_SYMBOL_ERROR}")
