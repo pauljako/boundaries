@@ -1,0 +1,8 @@
+{
+  "name": "boundaries",
+  "command": {
+    "run": "./main.py"
+  },
+  "bin": "boundaries",
+  "version": "0.7"
+}
