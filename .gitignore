@@ -1,4 +1,4 @@
-/apps
+/apps/[!boundaries]
 /exec
 /.idea
 /var
