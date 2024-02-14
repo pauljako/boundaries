@@ -35,7 +35,7 @@ def main():
         print("Cloning failed")
         return False
     os.chdir(os.path.expanduser("~/boundaries"))
-    Path("bin").symlink_to("apps/boundaries")
+    Path("apps/boundaries").symlink_to("bin")
     Path("exec").mkdir()
     Path("exec/bin").mkdir()
     Path("exec/desktop").mkdir()
