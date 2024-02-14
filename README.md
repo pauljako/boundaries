@@ -52,15 +52,15 @@ There are many not necessary other entries. A full list can be found [here](../m
 
 # Working Platforms
 
-| Platform / OS   | Version | Status      | Notes                                          |
-|-----------------|---------|-------------|------------------------------------------------|
-| macOS           | 14      | Not Working | Many Programs are not Designed for macOS       |
-| NixOS           | -       | Not Working | May Work, but additional tweaking is required  |
-| Fedora          | 39      | Working     | -                                              |
-| Arch Linux      | -       | Working     | -                                              |
-| Ubuntu          | -       | Untested    | Should Work                                    |
-| Debian          | -       | Untested    | Should Work                                    |
-| Raspberry Pi OS | Buster  | Working     | -                                              |
+| Platform / OS   | Version | Status      | Notes                                         |
+|-----------------|---------|-------------|-----------------------------------------------|
+| macOS           | 14      | Not Working | Many Programs are not Designed for macOS      |
+| NixOS           | -       | Not Working | May Work, but additional tweaking is required |
+| Fedora          | 39      | Working     | -                                             |
+| Arch Linux      | -       | Working     | -                                             |
+| Ubuntu          | -       | Untested    | Should Work                                   |
+| Debian          | 12      | Working     | -                                             |
+| Raspberry Pi OS | Buster  | Working     | -                                             |
 
 #### Please Report any issues
 
