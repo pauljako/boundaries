@@ -153,8 +153,12 @@ def install(filepath):
         if "icon" in info:
             print(f"{QUOTE_SYMBOL_DOING}Creating Desktop Entry{QUOTE_SYMBOL_DOING}")
             desktop_path = os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop")
+            if "startup_wm_class" in info:
+                startup_wm_class = f"\nStartupWMClass={info['startup_wm_class']}"
+            else:
+                startup_wm_class = ""
             with open(desktop_path, "w") as f:
-                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}"
+                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class}"
                 f.write(d)
             print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {desktop_path}')
