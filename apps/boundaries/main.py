@@ -42,7 +42,8 @@ def getpkginfo(packagename: str) -> dict | None:
 
 def listpkgs():
     print("Installed Packages:")
-    for p in os.listdir(APP_DIR):
+    dir_content = sorted(os.listdir(APP_DIR))
+    for p in dir_content:
         info = getpkginfo(p)
         if info is not None and "name" in info:
             if "de_name" in info:
@@ -125,7 +126,7 @@ def install(filepath):
         shutil.copytree(package_folder, os.path.join(APP_DIR, pkg_name))
     package_folder = os.path.join(APP_DIR, pkg_name)
     os.chdir(package_folder)
-    os.system("pwd")
+    # os.system("pwd")
     infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
