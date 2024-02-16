@@ -75,10 +75,10 @@ def run(filename, args):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
     org_dir = os.getcwd()
-    os.chdir(package_folder)
+    # os.chdir(package_folder)
     if info is None:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
-    run_command = info["command"]["run"]
+    run_command = os.path.realpath(os.path.join(package_folder, info["command"]["run"]))
     for a in args:
         run_command = run_command + " " + a
     print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
