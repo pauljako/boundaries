@@ -9,6 +9,7 @@ The boundaries.json file can contain the following options:
 - icon: Path to the App icon (A .desktop Entry will not be created without it)
 - de_name: The Desktop Name of the Application  (Can be uppercase and can contain spaces). For Example: PyCharm CE
 - bin: When Specified a Command with the given name will be created to execute the Program Quicker
+- startup_wm_class: When Specified the Field StartupWMClass in the .desktop file will be set to it
 
 # Examples
 ### PyCharm CE 2023.2.1
@@ -20,7 +21,8 @@ The boundaries.json file can contain the following options:
   },
   "version": "2023.2.1",
   "icon": "bin/pycharm.png",
-  "de_name": "PyCharm CE"
+  "de_name": "PyCharm CE",
+  "startup_wm_class": "jetbrains-pycharm-ce"
 }
 ```
 ### Visual Studio Code
