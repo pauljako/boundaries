@@ -46,9 +46,9 @@ The boundaries.json File is a File that contains all the Information for boundar
 
 The File has to have at least two entries:
 1. name: The name of the package. name cannot contain spaces nor uppercase letters.
-2. command{run}: command is a Dictionary, which contains commands for certain things. the run command specifies the command that executes the Program.
+2. command{run}: command is a Dictionary, which contains commands for certain things. the run command specifies the path to the executable that executes the Program.
 
-There are many not necessary other entries. A full list can be found [here](../main/JSONFILE.md)
+There are many other not necessary entries. A full list can be found [here](../main/JSONFILE.md)
 
 # Working Platforms
 
