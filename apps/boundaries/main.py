@@ -73,7 +73,7 @@ def remove(filename, keep_data=False):
         if os.path.islink(bin_path):
             os.unlink(bin_path)
         else:
-            os.remove(os.path.realpath())
+            os.remove(bin_path)
 
 
 def run(filename, args):
