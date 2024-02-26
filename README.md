@@ -30,6 +30,11 @@ Or just run one of these commands:
 ### Step 2:
 Run the installer using the following command (one line):
 `curl https://raw.githubusercontent.com/pauljako/boundaries/main/install.py | python3`
+
+# Update from an older Version
+Since Version 0.8.6 it is possible do directly Update boundaries. Just download the Repository and install with the following Command
+`boundaries -i <path to cloned repo>/apps/boundaries`
+Press Enter if it asks if you want to replace the Exisiting one
 # Status / TODO
 ### Repository
 The Repository is in Development and a boundaries package for downloading and installing Packages using curl is available [here](https://github.com/pauljako/bnd-repo).
