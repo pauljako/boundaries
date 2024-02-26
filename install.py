@@ -45,4 +45,4 @@ def main():
 
 if __name__ == "__main__":
     if not main():
-        print("Boundaries was not installed.")
+        print("boundaries was not installed.")
