@@ -38,7 +38,7 @@ def main():
     Path("bin").symlink_to("apps/boundaries")
     Path("exec").mkdir()
     Path("exec/bin").mkdir()
-    Path("exec/desktop").mkdir()
+    Path("exec/desktop").sysmlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
     Path("var").mkdir()
     return True
 
