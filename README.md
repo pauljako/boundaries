@@ -8,7 +8,7 @@ Yet another useless Package Manager for Linux. It uses archives of the applicati
 - Running: `boundaries --run <package name>`
 - Running (short form): `boundaries -r <package name>`
 - Listing Installed Packages: `boundaries --list`
-- Uninstalling: `boundaries --remove <package name>`
+- Removing: `boundaries --remove <package name>`
 
 # Installation
 ### Step 1:
