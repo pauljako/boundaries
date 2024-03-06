@@ -99,11 +99,10 @@ def install(filepath):
         package_folder = os.path.join("/tmp", "boundaries")
         print(f"{QUOTE_SYMBOL_DOING}Unpacking {filepath}{QUOTE_SYMBOL_DOING}")
         shutil.unpack_archive(filepath, package_folder)
-        for f in os.listdir(package_folder):
-            if f == "boundaries.json":
-                break
-            elif os.path.isdir(os.path.join(package_folder, f)):
-                package_folder = os.path.join(package_folder, f)
+        info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
+        if len(info_files) != 1:
+            print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
+        package_folder = os.path.dirname(str(info_files[0].resolve()))
     else:
         pkg = False
         package_folder = filepath
