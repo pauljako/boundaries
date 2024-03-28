@@ -89,7 +89,7 @@ def run(filename, args):
     run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"]["run"]))
     for a in args:
         run_command = run_command + " " + a
-    print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
+    # print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
     os.system(run_command)
 
 
