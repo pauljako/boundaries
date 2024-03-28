@@ -18,10 +18,10 @@ class Colors:
     UNDERLINE = '\033[4m'
 
 
-QUOTE_SYMBOL_DOING = f"{Colors.OKCYAN}::{Colors.ENDC}"
-QUOTE_SYMBOL_WARNING = f"{Colors.WARNING}::{Colors.ENDC}"
-QUOTE_SYMBOL_INFO = f"{Colors.OKGREEN}::{Colors.ENDC}"
-QUOTE_SYMBOL_ERROR = f"{Colors.FAIL}::{Colors.ENDC}"
+QUOTE_SYMBOL_DOING = f" {Colors.BOLD}{Colors.OKCYAN}::{Colors.ENDC} "
+QUOTE_SYMBOL_WARNING = f" {Colors.BOLD}{Colors.WARNING}::{Colors.ENDC} "
+QUOTE_SYMBOL_INFO = f" {Colors.BOLD}{Colors.OKGREEN}::{Colors.ENDC} "
+QUOTE_SYMBOL_ERROR = f" {Colors.BOLD}{Colors.FAIL}::{Colors.ENDC} "
 BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/bin")), ".."))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
