@@ -22,6 +22,7 @@ QUOTE_SYMBOL_DOING = f" {Colors.BOLD}{Colors.OKCYAN}::{Colors.ENDC} "
 QUOTE_SYMBOL_WARNING = f" {Colors.BOLD}{Colors.WARNING}::{Colors.ENDC} "
 QUOTE_SYMBOL_INFO = f" {Colors.BOLD}{Colors.OKGREEN}::{Colors.ENDC} "
 QUOTE_SYMBOL_ERROR = f" {Colors.BOLD}{Colors.FAIL}::{Colors.ENDC} "
+QUOTE_SYMBOL_OUTPUT = f" {Colors.BOLD}{Colors.OKBLUE}::{Colors.ENDC} "
 BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/bin")), ".."))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
@@ -41,7 +42,7 @@ def getpkginfo(packagename: str) -> dict | None:
 
 
 def listpkgs():
-    print("Installed Packages:")
+    print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
     dir_content = sorted(os.listdir(APP_DIR))
     for p in dir_content:
         info = getpkginfo(p)
@@ -54,7 +55,7 @@ def listpkgs():
                 version = f" {str(info['version'])}"
             else:
                 version = ""
-            print(f"{info['name']} ({de_name}{version})")
+            print(f"{QUOTE_SYMBOL_OUTPUT}{info['name']} ({de_name}{version})")
 
 
 def remove(filename, keep_data=False):
