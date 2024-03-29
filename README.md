@@ -16,16 +16,17 @@ Install the following dependencies:
 
 - git
 - curl
-- python3 (3.7+)
+- python3 (3.7+, must be in /bin/python3)
+- bash (must be in /bin/bash)
 
 Or just run one of these commands:
 
 - Arch Linux:
-`pacman -S git curl python3`
+`pacman -S git curl python3 bash`
 - Debian / Ubuntu:
-`apt install git curl python3`
+`apt install git curl python3 bash`
 - Fedora:
-`dnf install git curl python3`
+`dnf install git curl python3 bash`
 
 ### Step 2:
 Run the installer using the following command (one line):
