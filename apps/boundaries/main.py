@@ -95,18 +95,18 @@ def run(filename, args):
 
 def install(filepath):
     filepath = os.path.realpath(os.path.join(os.getcwd(), filepath))
+    package_folder = os.path.join("/tmp", "boundaries")
+    if os.path.exists(package_folder):
+        shutil.rmtree(package_folder)
     if not os.path.isdir(filepath):
-        pkg = True
-        package_folder = os.path.join("/tmp", "boundaries")
         print(f"{QUOTE_SYMBOL_DOING}Unpacking {filepath}{QUOTE_SYMBOL_DOING}")
         shutil.unpack_archive(filepath, package_folder)
-        info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
-        if len(info_files) != 1:
-            print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
-        package_folder = os.path.dirname(str(info_files[0].resolve()))
     else:
-        pkg = False
-        package_folder = filepath
+        shutil.copytree(filepath, package_folder)
+    info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
+    if len(info_files) != 1:
+        print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
+    package_folder = os.path.dirname(str(info_files[0].resolve()))
     infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
@@ -124,13 +124,9 @@ def install(filepath):
             return False
         else:
             remove(pkg_name, True)
-    if pkg:
-        shutil.move(package_folder, os.path.join(APP_DIR, pkg_name))
-    else:
-        shutil.copytree(package_folder, os.path.join(APP_DIR, pkg_name))
+    shutil.move(package_folder, os.path.join(APP_DIR, pkg_name))
     package_folder = os.path.join(APP_DIR, pkg_name)
     os.chdir(package_folder)
-    # os.system("pwd")
     infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
         with open(infofile, "rb") as f:
