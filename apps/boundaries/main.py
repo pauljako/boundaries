@@ -42,7 +42,7 @@ def getpkginfo(packagename: str) -> dict | None:
 
 
 def listpkgs():
-    print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
+    # print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
     dir_content = sorted(os.listdir(APP_DIR))
     for p in dir_content:
         info = getpkginfo(p)
