@@ -4,5 +4,5 @@
     "run": "./main.py"
   },
   "bin": "boundaries",
-  "version": "0.8.7"
+  "version": "0.9"
 }
