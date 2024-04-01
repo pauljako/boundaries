@@ -24,11 +24,14 @@ QUOTE_SYMBOL_WARNING = f" {Colors.BOLD}{Colors.WARNING}::{Colors.ENDC} "
 QUOTE_SYMBOL_INFO = f" {Colors.BOLD}{Colors.OKGREEN}::{Colors.ENDC} "
 QUOTE_SYMBOL_ERROR = f" {Colors.BOLD}{Colors.FAIL}::{Colors.ENDC} "
 QUOTE_SYMBOL_OUTPUT = f" {Colors.BOLD}{Colors.OKBLUE}::{Colors.ENDC} "
+SIMPLE = False
 BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/bin")), ".."))
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
 VAR_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "var"))
 BND_DIR = os.path.realpath(os.path.join(APP_DIR, "boundaries"))
+with open(os.path.realpath(os.path.join(BND_DIR, "boundaries.json")), "rb") as f:
+    VERSION = json.load(f)["version"]
 
 
 def getpkginfo(packagename: str) -> dict | None:
@@ -43,20 +46,27 @@ def getpkginfo(packagename: str) -> dict | None:
 
 
 def listpkgs():
-    # print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
-    dir_content = sorted(os.listdir(APP_DIR))
-    for p in dir_content:
-        info = getpkginfo(p)
-        if info is not None and "name" in info:
-            if "de_name" in info:
-                de_name = info["de_name"]
-            else:
-                de_name = info["name"]
-            if "version" in info:
-                version = f" {str(info['version'])}"
-            else:
-                version = ""
-            print(f"{QUOTE_SYMBOL_OUTPUT}{info['name']} ({de_name}{version})")
+    if not SIMPLE:
+        print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
+        dir_content = sorted(os.listdir(APP_DIR))
+        for p in dir_content:
+            info = getpkginfo(p)
+            if info is not None and "name" in info:
+                if "de_name" in info:
+                    de_name = info["de_name"]
+                else:
+                    de_name = info["name"]
+                if "version" in info:
+                    version = f" {str(info['version'])}"
+                else:
+                    version = ""
+                print(f"{QUOTE_SYMBOL_OUTPUT}{info['name']} ({de_name}{version})")
+    else:
+        dir_content = sorted(os.listdir(APP_DIR))
+        for p in dir_content:
+            info = getpkginfo(p)
+            if info is not None and "name" in info:
+                print(f"{QUOTE_SYMBOL_OUTPUT}{info['name']}")
 
 
 def remove(filename, keep_data=False):
@@ -78,7 +88,7 @@ def remove(filename, keep_data=False):
             os.remove(bin_path)
 
 
-def run(filename, args):
+def run(filename, app_args):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
     var_folder = os.path.join(VAR_DIR, filename)
@@ -86,7 +96,7 @@ def run(filename, args):
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
     run_command = f"APP_DIR={package_folder} VAR_DIR={var_folder} "
     run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"]["run"]))
-    for a in args:
+    for a in app_args:
         run_command = run_command + " " + a
     # print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
     os.system(run_command)
@@ -140,10 +150,13 @@ def install(filepath):
     custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
         custom_install_command = info["command"]["install"]
-        print(f"{QUOTE_SYMBOL_DOING}Running Command \"{custom_install_command}\"{QUOTE_SYMBOL_DOING}")
+        if not SIMPLE:
+            print(f"{QUOTE_SYMBOL_DOING}Running Command \"{custom_install_command}\"{QUOTE_SYMBOL_DOING}")
+        else:
+            print(f"{QUOTE_SYMBOL_DOING}Running Command{QUOTE_SYMBOL_DOING}")
         custom_install_command_success = os.system(custom_install_command)
     else:
-        print(f"{QUOTE_SYMBOL_INFO}No Command to Run.{QUOTE_SYMBOL_INFO}")
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Command to Run.{QUOTE_SYMBOL_INFO}")
         custom_install_command_success = 0
     if custom_install_command_success == 0:
         if "de_name" in info:
@@ -163,7 +176,7 @@ def install(filepath):
             print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {desktop_path}')
         else:
-            print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
+            if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
         if "bin" in info:
             print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
@@ -180,7 +193,9 @@ def install(filepath):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog="boundaries", allow_abbrev=False)
+    parser = argparse.ArgumentParser(prog="boundaries", allow_abbrev=False, description=f"The boundaries Package Manager. Version: {VERSION}")
+
+    parser.add_argument("--simple", help="show a Simplified Output", action="store_true")
 
     sub_parser = parser.add_subparsers(title="Actions", dest="action")
 
@@ -197,6 +212,10 @@ if __name__ == '__main__':
     list_parser = sub_parser.add_parser("list", help="List installed Packages")
 
     args = parser.parse_args()
+    
+    SIMPLE = args.simple
+    if SIMPLE:
+        QUOTE_SYMBOL_DOING = QUOTE_SYMBOL_WARNING = QUOTE_SYMBOL_INFO = QUOTE_SYMBOL_ERROR = QUOTE_SYMBOL_OUTPUT = ""
 
     if args.action == "install":
         install(args.path)
