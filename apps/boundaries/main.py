@@ -4,6 +4,7 @@ import pathlib
 import sys
 import shutil
 import json
+import argparse
 
 
 class Colors:
@@ -81,8 +82,6 @@ def run(filename, args):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
     var_folder = os.path.join(VAR_DIR, filename)
-    org_dir = os.getcwd()
-    # os.chdir(package_folder)
     if info is None:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
     run_command = f"APP_DIR={package_folder} VAR_DIR={var_folder} "
@@ -106,6 +105,7 @@ def install(filepath):
     info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
     if len(info_files) != 1:
         print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
+        return False
     package_folder = os.path.dirname(str(info_files[0].resolve()))
     infofile = os.path.join(package_folder, "boundaries.json")
     if os.path.exists(infofile):
@@ -158,7 +158,7 @@ def install(filepath):
             else:
                 startup_wm_class = ""
             with open(desktop_path, "w") as f:
-                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} -r \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class}"
+                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class}"
                 f.write(d)
             print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {desktop_path}')
@@ -168,7 +168,7 @@ def install(filepath):
             print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
             with open(binpath, "w") as f:
-                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} -r \"{pkg_name}\" $i'
+                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} run \"{pkg_name}\" $i'
                 f.write(d)
             print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {binpath}')
@@ -180,33 +180,29 @@ def install(filepath):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        action = sys.argv[1]
-    else:
-        print(f"{QUOTE_SYMBOL_ERROR}No Argument given{QUOTE_SYMBOL_ERROR}")
-        exit()
-    if action == "--install" or action == "-i":
-        if len(sys.argv) != 3:
-            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 1 Argument{QUOTE_SYMBOL_ERROR}")
-            exit()
-        if install(sys.argv[2]):
-            print(f"{QUOTE_SYMBOL_INFO}{sys.argv[2]} was installed successfully{QUOTE_SYMBOL_INFO}")
-        else:
-            print(f"{QUOTE_SYMBOL_ERROR}{sys.argv[2]} was not installed successfully{QUOTE_SYMBOL_ERROR}")
-    elif action == "--run" or action == "-r":
-        if len(sys.argv) < 3:
-            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires at least 1 Argument{QUOTE_SYMBOL_ERROR}")
-            exit()
-        run(sys.argv[2], sys.argv[3:])
-    elif action == "--remove":
-        if len(sys.argv) != 3:
-            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 1 Argument{QUOTE_SYMBOL_ERROR}")
-            exit()
-        remove(sys.argv[2])
-    elif action == "--list":
-        if len(sys.argv) != 2:
-            print(f"{QUOTE_SYMBOL_ERROR}The Command Requires Exactly 0 Arguments{QUOTE_SYMBOL_ERROR}")
-            exit()
+    parser = argparse.ArgumentParser(prog="boundaries", allow_abbrev=False)
+
+    sub_parser = parser.add_subparsers(title="Actions", dest="action")
+
+    install_parser = sub_parser.add_parser("install", help="Install a package")
+    install_parser.add_argument("path", help="Path to the Package")
+
+    run_parser = sub_parser.add_parser("run", help="Run a package")
+    run_parser.add_argument("package", help="Package Name")
+    run_parser.add_argument("args", help="Arguments that are passed to the Application", nargs=argparse.REMAINDER)
+
+    remove_parser = sub_parser.add_parser("remove", help="Remove a Package")
+    remove_parser.add_argument("package", help="Package Name")
+
+    list_parser = sub_parser.add_parser("list", help="List installed Packages")
+
+    args = parser.parse_args()
+
+    if args.action == "install":
+        install(args.path)
+    elif args.action == "run":
+        run(args.package, args.args)
+    elif args.action == "remove":
+        remove(args.package)
+    elif args.action == "list":
         listpkgs()
-    else:
-        print(f"{QUOTE_SYMBOL_ERROR}Invalid Argument \"{action}\"{QUOTE_SYMBOL_ERROR}")
