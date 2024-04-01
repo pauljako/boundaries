@@ -3,12 +3,10 @@
 Yet another useless Package Manager for Linux. It uses archives of the application and a json File containing the information that boundaries needs.
 
 # Usage
-- Installing: `boundaries --install <path to archive/dir>`
-- Installing (short form): `boundaries -i <path to archive/dir>`
-- Running: `boundaries --run <package name>`
-- Running (short form): `boundaries -r <package name>`
-- Listing Installed Packages: `boundaries --list`
-- Removing: `boundaries --remove <package name>`
+- Installing: `boundaries install <path to archive/dir>`
+- Running: `boundaries run <package name> <arguments passed to the package>`
+- Listing Installed Packages: `boundaries list`
+- Removing: `boundaries remove <package name>`
 
 # Installation
 ### Step 1:
@@ -37,7 +35,9 @@ Since Version 0.8.6 it is possible do directly Update boundaries. Just download 
 
 `boundaries -i <path to cloned repo>/apps/boundaries`
 
-Press Enter if it asks if you want to replace the Exisiting one
+Press Enter if it asks you if you want to replace the Exisiting one
+
+#### Note: In Version 0.9 the CLI interface was overhauled and you may need to Reinstall Packages so the .desktop files and the direct Command works again
 # Status / TODO
 ### Repository
 The Repository is in Development and a boundaries package for downloading and installing Packages using curl is available [here](https://github.com/pauljako/bnd-repo).
