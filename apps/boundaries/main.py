@@ -102,7 +102,7 @@ def run(filename, app_args):
     os.system(run_command)
 
 
-def install(filepath):
+def install(filepath, ask_for_replace: bool = False):
     filepath = os.path.realpath(os.path.join(os.getcwd(), filepath))
     package_folder = os.path.join("/tmp", "boundaries")
     if os.path.exists(package_folder):
@@ -130,7 +130,7 @@ def install(filepath):
         print(f"{QUOTE_SYMBOL_ERROR}The boundaries.json file did not provide enough necessary information{QUOTE_SYMBOL_ERROR}")
         return False
     if os.path.exists(os.path.join(APP_DIR, pkg_name)) and os.path.isdir(os.path.join(APP_DIR, pkg_name)):
-        if input(f"{QUOTE_SYMBOL_WARNING}The Package is already installed. Do you want to delete the existing one? (Y/n) ") == "n":
+        if ask_for_replace and input(f"{QUOTE_SYMBOL_WARNING}The Package is already installed. Do you want to delete the existing one? (Y/n) ").lower() == "n":
             return False
         else:
             remove(pkg_name, True)
@@ -200,6 +200,7 @@ if __name__ == '__main__':
     sub_parser = parser.add_subparsers(title="Actions", dest="action")
 
     install_parser = sub_parser.add_parser("install", help="Install a package")
+    install_parser.add_argument("--ask", help="Ask if the Package should be replaced when it is already installed", action="store_true")
     install_parser.add_argument("path", help="Path to the Package")
 
     run_parser = sub_parser.add_parser("run", help="Run a package")
@@ -218,7 +219,7 @@ if __name__ == '__main__':
         QUOTE_SYMBOL_DOING = QUOTE_SYMBOL_WARNING = QUOTE_SYMBOL_INFO = QUOTE_SYMBOL_ERROR = QUOTE_SYMBOL_OUTPUT = ""
 
     if args.action == "install":
-        install(args.path)
+        install(args.path, args.ask)
     elif args.action == "run":
         run(args.package, args.args)
     elif args.action == "remove":
