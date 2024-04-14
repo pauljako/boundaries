@@ -149,49 +149,50 @@ def install(filepath, ask_for_replace: bool = False):
     if not os.path.exists(os.path.join(VAR_DIR, pkg_name)):
         print(f"{QUOTE_SYMBOL_DOING}Creating Data Directory{QUOTE_SYMBOL_DOING}")
         pathlib.Path(os.path.join(VAR_DIR, pkg_name)).mkdir()
+
+    if "de_name" in info:
+        de_name = info["de_name"]
+    else:
+        de_name = pkg_name
+    if "icon" in info:
+        print(f"{QUOTE_SYMBOL_DOING}Creating Desktop Entry{QUOTE_SYMBOL_DOING}")
+        desktop_path = os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop")
+        if "startup_wm_class" in info:
+            startup_wm_class = f"\nStartupWMClass={info['startup_wm_class']}"
+        else:
+            startup_wm_class = ""
+        with open(desktop_path, "w") as f:
+            d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class}"
+            f.write(d)
+        print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
+        os.system(f'chmod +x {desktop_path}')
+    else:
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
+    if "bin" in info:
+        print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
+        binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
+        with open(binpath, "w") as f:
+            d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} run \"{pkg_name}\" $i'
+            f.write(d)
+        print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
+        os.system(f'chmod +x {binpath}')
     custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
         custom_install_command = info["command"]["install"]
         if not SIMPLE:
             print(f"{QUOTE_SYMBOL_DOING}Running Command \"{custom_install_command}\"{QUOTE_SYMBOL_DOING}")
         else:
-            print(f"{QUOTE_SYMBOL_DOING}Running Command{QUOTE_SYMBOL_DOING}")
+            print(f"{QUOTE_SYMBOL_DOING}Running Installation Script{QUOTE_SYMBOL_DOING}")
         custom_install_command_success = os.system(custom_install_command)
     else:
-        if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Command to Run.{QUOTE_SYMBOL_INFO}")
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Installation Script to run{QUOTE_SYMBOL_INFO}")
         custom_install_command_success = 0
-    if custom_install_command_success == 0:
-        if "de_name" in info:
-            de_name = info["de_name"]
-        else:
-            de_name = pkg_name
-        if "icon" in info:
-            print(f"{QUOTE_SYMBOL_DOING}Creating Desktop Entry{QUOTE_SYMBOL_DOING}")
-            desktop_path = os.path.realpath(f"{EXEC_DIR}/desktop/{pkg_name}.desktop")
-            if "startup_wm_class" in info:
-                startup_wm_class = f"\nStartupWMClass={info['startup_wm_class']}"
-            else:
-                startup_wm_class = ""
-            with open(desktop_path, "w") as f:
-                d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false\nType=Application\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class}"
-                f.write(d)
-            print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
-            os.system(f'chmod +x {desktop_path}')
-        else:
-            if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
-        if "bin" in info:
-            print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
-            binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
-            with open(binpath, "w") as f:
-                d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} run \"{pkg_name}\" $i'
-                f.write(d)
-            print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
-            os.system(f'chmod +x {binpath}')
-        print(f"{QUOTE_SYMBOL_INFO}{pkg_name} installed successfully.{QUOTE_SYMBOL_INFO}")
-        return True
-    else:
+    if custom_install_command_success != 0:
         print(f"{QUOTE_SYMBOL_ERROR}Install Command failed{QUOTE_SYMBOL_ERROR}")
         return False
+
+    print(f"{QUOTE_SYMBOL_INFO}{pkg_name} installed successfully.{QUOTE_SYMBOL_INFO}")
+    return True
 
 
 if __name__ == '__main__':
