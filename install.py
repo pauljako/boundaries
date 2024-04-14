@@ -6,6 +6,9 @@ from pathlib import Path
 
 
 def main():
+    print("------------------------")
+    print("| boundaries Installer |")
+    print("------------------------")
     if not sys.platform == "linux":
         try:
             answer = input("Your OS is not Supported. Continue anyway? (y/N) ")
@@ -35,14 +38,16 @@ def main():
         print("Cloning failed")
         return False
     os.chdir(os.path.expanduser("~/boundaries"))
+    print("Creating Directories")
     Path("bin").symlink_to("apps/boundaries")
     Path("exec").mkdir()
     Path("exec/bin").mkdir()
-    Path("exec/desktop").mkdir()
+    Path("exec/desktop").symlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
     Path("var").mkdir()
+    Path("var/boundaries").mkdir()
     return True
 
 
 if __name__ == "__main__":
     if not main():
-        print("Boundaries was not installed.")
+        print("boundaries was not installed.")

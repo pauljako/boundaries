@@ -3,12 +3,11 @@
 Yet another useless Package Manager for Linux. It uses archives of the application and a json File containing the information that boundaries needs.
 
 # Usage
-- Installing: `boundaries --install <path to archive/dir>`
-- Installing (short form): `boundaries -i <path to archive/dir>`
-- Running: `boundaries --run <package name>`
-- Running (short form): `boundaries -r <package name>`
-- Listing Installed Packages: `boundaries --list`
-- Uninstalling: `boundaries --remove <package name>`
+- Installing: `boundaries install <path to archive/dir>`
+- Running: `boundaries run <package name> <arguments passed to the package>`
+- Listing Installed Packages: `boundaries list`
+- Removing: `boundaries remove <package name>`
+- Print Help: `boundaries -h`
 
 # Installation
 ### Step 1:
@@ -16,20 +15,30 @@ Install the following dependencies:
 
 - git
 - curl
-- python3 (3.7+)
+- python3 (3.7+, must be in /bin/python3)
+- bash (must be in /bin/bash)
 
 Or just run one of these commands:
 
 - Arch Linux:
-`pacman -S git curl python3`
+`pacman -S git curl python3 bash`
 - Debian / Ubuntu:
-`apt install git curl python3`
+`apt install git curl python3 bash`
 - Fedora:
-`dnf install git curl python3`
+`dnf install git curl python3 bash`
 
 ### Step 2:
 Run the installer using the following command (one line):
 `curl https://raw.githubusercontent.com/pauljako/boundaries/main/install.py | python3`
+
+# Update from an older Version
+Since Version 0.8.6 it is possible do directly Update boundaries. Just download the Repository and install with the following Command:
+
+`boundaries -i <path to cloned repo>/apps/boundaries`
+
+Press Enter if it asks you if you want to replace the Exisiting one
+
+#### Note: In Version 0.9 the CLI interface was overhauled and you may need to Reinstall Packages so the .desktop files and the direct Command works again
 # Status / TODO
 ### Repository
 The Repository is in Development and a boundaries package for downloading and installing Packages using curl is available [here](https://github.com/pauljako/bnd-repo).
