@@ -84,8 +84,10 @@ def remove(filename, keep_data=False):
         bin_path = f"{EXEC_DIR}/bin/{info['bin']}"
         if os.path.islink(bin_path):
             os.unlink(bin_path)
-        else:
+        elif os.path.exists(bin_path):
             os.remove(bin_path)
+        else:
+            print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
 
 
 def run(filename, app_args):
