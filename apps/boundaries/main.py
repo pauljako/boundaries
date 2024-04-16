@@ -45,6 +45,16 @@ def getpkginfo(packagename: str) -> dict | None:
         return None
 
 
+def get_packages() -> list:
+    pkgs = []
+    dir_content = sorted(os.listdir(APP_DIR))
+    for p in dir_content:
+        path = os.path.realpath(os.path.join(APP_DIR, p))
+        if os.path.exists(path) and os.path.isdir(path) and (getpkginfo(p) is not None):
+            pkgs.append(p)
+    return pkgs
+
+
 def listpkgs():
     if not SIMPLE:
         print(f"{QUOTE_SYMBOL_OUTPUT}Installed Packages:")
