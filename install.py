@@ -52,6 +52,21 @@ def main():
     print("=> Reinstalling the boundaries Package")
     os.system("apps/boundaries/main.py install apps/boundaries")
 
+    try:
+        answer = input("Do you want to add the boundaries Repository Manager (bnd-repo)? (Y/n) ")
+    except EOFError:
+        print("EOFError When reading line. stdin might not be accessible")
+        answer = "n"
+    if answer.lower() != "n":
+        print("=> Cloning bnd-repo")
+        os.chdir(os.path.expanduser("~"))
+        clone_result = os.system("git clone https://github.com/pauljako/bnd-repo.git")
+        if clone_result == 0:
+            print("=> Installing the bnd-repo Package")
+            os.system("boundaries/apps/boundaries/main.py install bnd-repo")
+        else:
+            print("Cloning failed")
+
     print("")
     print("boundaries successfully installed.")
     print("What to do next:")
