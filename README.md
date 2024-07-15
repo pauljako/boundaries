@@ -28,7 +28,10 @@ Or just run one of these commands:
 `dnf install git curl python3 bash`
 
 ### Step 2:
-Run the installer using the following command (one line):
+Use the following Line to run the Installer (one line):
+`bash <(curl -s https://raw.githubusercontent.com/pauljako/boundaries/main/install.sh)`
+
+Or run the legacy installer using the following command (one line):
 `/bin/python3 <(curl -s https://raw.githubusercontent.com/pauljako/boundaries/main/install.py)`
 
 # Update from an older Version
