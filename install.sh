@@ -42,7 +42,8 @@ get_ins_loc() {
         read -r -p "> " tmp_loc
         if [ -z "$tmp" ]; then
             echo "----"
-            echo "Error Please enter a Path"
+            echo "Error. Please enter a Path"
+            get_ins_loc
         else
             loc=$(realpath "$tmp_loc")
         fi
@@ -77,5 +78,8 @@ echo "----"
 echo "Creating Subdirectories"
 mkdir -p "$loc"/var/boundaries
 mkdir -p "$loc"/exec/{desktop,bin}
+echo "----"
 echo "Reinstalling the boundaries Core Package"
 python3 "$loc"/apps/boundaries/main.py install "$loc"/apps/boundaries
+echo "----"
+echo "Done. You need to add the following directory to your path: $loc/exec/bin"
