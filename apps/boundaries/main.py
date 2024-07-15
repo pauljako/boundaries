@@ -123,7 +123,7 @@ def install(filepath, ask_for_replace: bool = False):
         print(f"{QUOTE_SYMBOL_DOING}Unpacking {filepath}{QUOTE_SYMBOL_DOING}")
         shutil.unpack_archive(filepath, package_folder)
     else:
-        shutil.copytree(filepath, package_folder)
+        shutil.copytree(filepath, package_folder, symlinks=True)
     info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
     if len(info_files) != 1:
         print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
