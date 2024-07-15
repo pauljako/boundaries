@@ -1,4 +1,12 @@
 /apps/[!boundaries]
+/apps/krita
+/apps/onlyoffice
+/apps/bnd-repo
+/apps/neofetch
+/apps/nerdfetch
+/apps/pycharm-ce
+/apps/steam
 /exec
 /.idea
 /var
+/bin
