@@ -21,7 +21,7 @@ if not os.path.exists("exec"):
     print("Warning: exec dir does not exist. Creating it...")
     pathlib.Path("exec").mkdir()
     pathlib.Path("exec/bin").mkdir()
-    Path("exec/desktop").symlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
+    pathlib.Path("exec/desktop").symlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
 
 if not os.path.exists("exec/bin"):
     print("Warning: exec/bin dir does not exist. Creating it...")
@@ -29,10 +29,10 @@ if not os.path.exists("exec/bin"):
 
 if not os.path.exists("exec/desktop"):
     print("Warning: exec/desktop dir does not exist. Making a Symlink...")
-    Path("exec/desktop").symlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
+    pathlib.Path("exec/desktop").symlink_to(os.path.realpath(os.path.expanduser("~/.local/share/applications")))
 
 if not os.path.exists("bin"):
     print("Warning: bin dir does not exist. Making a Symlink...")
-    Path("bin").symlink_to("apps/boundaries")
+    pathlib.Path("bin").symlink_to("apps/boundaries")
 
 print("Folder Structure checking done")
