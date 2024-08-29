@@ -12,6 +12,8 @@
 /apps/anydesk
 /apps/discord
 /apps/bnd-gui
+/apps/golang
+/apps/nogamename
 /exec
 /sandbox
 /.idea
