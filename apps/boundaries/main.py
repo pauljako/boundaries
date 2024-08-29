@@ -91,7 +91,7 @@ def remove(filename, keep_data=False):
         os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
     if "bin" in info:
         if isinstance(info["bin"], str):
-            print(f"{QUOTE_SYMBOL_DOING}Removing Command {info["bin"]}{QUOTE_SYMBOL_DOING}")
+            print(f"{QUOTE_SYMBOL_DOING}Removing Command {info['bin']}{QUOTE_SYMBOL_DOING}")
             bin_path = f"{EXEC_DIR}/bin/{info['bin']}"
             if os.path.islink(bin_path):
                 os.unlink(bin_path)
