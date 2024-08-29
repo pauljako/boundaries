@@ -90,14 +90,26 @@ def remove(filename, keep_data=False):
         print(f"{QUOTE_SYMBOL_DOING}Removing Desktop Entry{QUOTE_SYMBOL_DOING}")
         os.remove(os.path.realpath(f"{EXEC_DIR}/desktop/{filename}.desktop"))
     if "bin" in info:
-        print(f"{QUOTE_SYMBOL_DOING}Removing Command{QUOTE_SYMBOL_DOING}")
-        bin_path = f"{EXEC_DIR}/bin/{info['bin']}"
-        if os.path.islink(bin_path):
-            os.unlink(bin_path)
-        elif os.path.exists(bin_path):
-            os.remove(bin_path)
-        else:
-            print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
+        if isinstance(info["bin"], str):
+            print(f"{QUOTE_SYMBOL_DOING}Removing Command {info["bin"]}{QUOTE_SYMBOL_DOING}")
+            bin_path = f"{EXEC_DIR}/bin/{info['bin']}"
+            if os.path.islink(bin_path):
+                os.unlink(bin_path)
+            elif os.path.exists(bin_path):
+                os.remove(bin_path)
+            else:
+                print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
+        elif isinstance(info["bin"], dict):
+            for cmd in info["bin"]:
+                print(f"{QUOTE_SYMBOL_DOING}Removing Command {cmd}{QUOTE_SYMBOL_DOING}")
+                bin_path = f"{EXEC_DIR}/bin/{cmd}"
+                if os.path.islink(bin_path):
+                    os.unlink(bin_path)
+                elif os.path.exists(bin_path):
+                    os.remove(bin_path)
+                else:
+                    print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
+
 
 
 def run(filename, app_args, target: str = "run"):
