@@ -179,13 +179,23 @@ def install(filepath, ask_for_replace: bool = False):
     else:
         if not SIMPLE: print(f"{QUOTE_SYMBOL_INFO}No Icon. Not creating a .desktop File.{QUOTE_SYMBOL_INFO}")
     if "bin" in info:
-        print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
-        binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
-        with open(binpath, "w") as f:
-            d = f'#!/bin/bash\ni="";\nfor arg in "$@"\ndo\ni="$i $arg";\ndone\n{os.path.join(BND_DIR, "main.py")} run \"{pkg_name}\" $i'
-            f.write(d)
-        print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
-        os.system(f'chmod +x {binpath}')
+        if isinstance(info["bin"], str):
+            print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
+            binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
+            with open(binpath, "w") as f:
+                d = f'{os.path.join(BND_DIR, "main.py")} run --target \"run\" \"{pkg_name}\" $@'
+                f.write(d)
+            print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
+            os.system(f'chmod +x {binpath}')
+        elif isinstance(info["bin"], dict):
+            for target in info["bin"].keys():
+                print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin'][target]} for target {target}{QUOTE_SYMBOL_DOING}")
+                binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin'][target]}")
+                with open(binpath, "w") as f:
+                    d = f'{os.path.join(BND_DIR, "main.py")} run --target \"{target}\" \"{pkg_name}\" $@'
+                    f.write(d)
+                print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
+                os.system(f'chmod +x {binpath}')
     custom_install_command_available = "install" in info["command"]
     if custom_install_command_available:
         custom_install_command = info["command"]["install"]
