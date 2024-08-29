@@ -30,12 +30,15 @@ get_ins_loc() {
     echo "----"
     echo "Where do you want to install it?"
     echo "1) ~/boundaries (recommended)"
-    echo "2) Somewhere different"
+    echo "2) /usr/boundaries (system wide)"
+    echo "3) Somewhere different"
     echo "----"
     read -r -p "> " ins_loc
     if [ "$ins_loc" = "1" ]; then
         loc="$HOME/boundaries"
     elif [ "$ins_loc" = "2" ]; then
+	loc="/usr/boundaries"
+    elif [ "$ins_loc" = "3" ]; then
         echo "----"
         echo "Enter the Absolute Path"
         echo "----"
