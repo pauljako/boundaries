@@ -111,7 +111,6 @@ def remove(filename, keep_data=False):
                     print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
 
 
-
 def run(filename, app_args, target: str = "run"):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
@@ -122,7 +121,6 @@ def run(filename, app_args, target: str = "run"):
     run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"][target]))
     for a in app_args:
         run_command = run_command + " " + a
-    print(f"{QUOTE_SYMBOL_DOING}Running {filename} with target {target}{QUOTE_SYMBOL_DOING}")
     os.system(run_command)
 
 
