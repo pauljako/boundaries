@@ -100,9 +100,9 @@ def remove(filename, keep_data=False):
             else:
                 print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
         elif isinstance(info["bin"], dict):
-            for cmd in info["bin"]:
-                print(f"{QUOTE_SYMBOL_DOING}Removing Command {cmd}{QUOTE_SYMBOL_DOING}")
-                bin_path = f"{EXEC_DIR}/bin/{cmd}"
+            for cmd in info["bin"].keys():
+                print(f"{QUOTE_SYMBOL_DOING}Removing Command {info['bin'][cmd]}{QUOTE_SYMBOL_DOING}")
+                bin_path = f"{EXEC_DIR}/bin/{info['bin'][cmd]}"
                 if os.path.islink(bin_path):
                     os.unlink(bin_path)
                 elif os.path.exists(bin_path):
