@@ -100,17 +100,17 @@ def remove(filename, keep_data=False):
             print(f"{QUOTE_SYMBOL_WARNING}Command not found{QUOTE_SYMBOL_WARNING}")
 
 
-def run(filename, app_args):
+def run(filename, app_args, target: str = "run"):
     info = getpkginfo(filename)
     package_folder = os.path.join(APP_DIR, filename)
     var_folder = os.path.join(VAR_DIR, filename)
     if info is None:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
     run_command = f"APP_DIR={package_folder} VAR_DIR={var_folder} "
-    run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"]["run"]))
+    run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"][target]))
     for a in app_args:
         run_command = run_command + " " + a
-    # print(f"{QUOTE_SYMBOL_DOING}Running {filename}{QUOTE_SYMBOL_DOING}")
+    print(f"{QUOTE_SYMBOL_DOING}Running {filename} with target {target}{QUOTE_SYMBOL_DOING}")
     os.system(run_command)
 
 
@@ -218,8 +218,8 @@ if __name__ == '__main__':
 
     run_parser = sub_parser.add_parser("run", help="Run a package")
     run_parser.add_argument("package", help="Package Name")
+    run_parser.add_argument("--target", "-t", help="Specify the Target to be run", default="run")
     run_parser.add_argument("args", help="Arguments that are passed to the Application", nargs=argparse.REMAINDER)
-
     remove_parser = sub_parser.add_parser("remove", help="Remove a Package")
     remove_parser.add_argument("package", help="Package Name")
 
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     if args.action == "install":
         install(args.path, args.ask)
     elif args.action == "run":
-        run(args.package, args.args)
+        run(args.package, args.args, args.target)
     elif args.action == "remove":
         remove(args.package)
     elif args.action == "list":
