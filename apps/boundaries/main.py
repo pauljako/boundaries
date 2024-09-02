@@ -25,7 +25,18 @@ QUOTE_SYMBOL_INFO = f" {Colors.BOLD}{Colors.OKGREEN}::{Colors.ENDC} "
 QUOTE_SYMBOL_ERROR = f" {Colors.BOLD}{Colors.FAIL}::{Colors.ENDC} "
 QUOTE_SYMBOL_OUTPUT = f" {Colors.BOLD}{Colors.OKBLUE}::{Colors.ENDC} "
 SIMPLE = False
-BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/apps")), "."))
+
+if os.path.exists(os.path.expanduser("~/.bndpath")):
+    with open(os.path.expanduser("~/.bndpath"), "r") as file:
+        path = file.readline().strip().replace("\n", "")
+        if os.path.exists(os.path.expanduser(path)):
+            BND_DIR = os.path.realpath(os.path.join(os.path.expanduser(path), "apps"))
+        else:
+            print(f"{QUOTE_SYMBOL_ERROR}The path {path} does not exist. Please fix your ~/.bndpath file. Using default{QUOTE_SYMBOL_ERROR}")
+            BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/apps")), "."))
+else:
+    BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/apps")), "."))
+
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
 VAR_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "var"))
