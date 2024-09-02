@@ -182,7 +182,7 @@ def install(filepath, ask_for_replace: bool = False):
         else:
             startup_wm_class = ""
         with open(desktop_path, "w") as f:
-            d = f"[Desktop Entry]\nName={de_name};\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\";\nIcon={os.path.join(package_folder, info['icon'])};\nTerminal=false;\nType=Application;\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class};"
+            d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false;\nType=Application;\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class};"
             f.write(d)
         print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
         os.system(f'chmod +x {desktop_path}')
