@@ -2,7 +2,7 @@
   "name": "boundaries",
   "command": {
     "run": "./main.py",
-    "install": "python3 install.py"
+    "install": "python3 boundaries_install_updater.py"
   },
   "bin": "boundaries",
   "version": "0.9.3"
