@@ -57,7 +57,7 @@ def load_plugins() -> dict:
         "custom": {}
     }
     if not os.path.exists(PLUGIN_DIR):
-        return {}
+        return plugins
     for p in sorted(os.listdir(PLUGIN_DIR)):
         path = os.path.realpath(os.path.join(PLUGIN_DIR, p))
         sys.path.insert(1, path)
