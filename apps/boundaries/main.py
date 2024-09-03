@@ -5,6 +5,7 @@ import sys
 import shutil
 import json
 import argparse
+import importlib
 
 
 class Colors:
@@ -40,10 +41,43 @@ else:
 APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
 VAR_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "var"))
+PLUGIN_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "plugins"))
 BND_DIR = os.path.realpath(os.path.join(APP_DIR, "boundaries"))
 with open(os.path.realpath(os.path.join(BND_DIR, "boundaries.json")), "rb") as f:
     VERSION = json.load(f)["version"]
 
+
+def load_plugins() -> dict:
+    plugins = {
+        "extends": {
+            "run": {},
+            "install": {},
+            "remove": {},
+        },
+        "custom": {}
+    }
+    if not os.path.exists(PLUGIN_DIR):
+        return {}
+    for p in sorted(os.listdir(PLUGIN_DIR)):
+        path = os.path.realpath(os.path.join(PLUGIN_DIR, p))
+        sys.path.insert(1, path)
+        if not (os.path.exists(path) or os.path.isdir(path) or os.path.exists(os.path.join(path, "plugin.json"))):
+            break
+        with open(os.path.join(path, "plugin.json"), "rb") as f:
+            pluginspec = json.load(f)
+        if ("name" not in pluginspec):
+            break
+        if "extends" in pluginspec:
+            for k, v in pluginspec["extends"].items():
+                if k == "run":
+                    plugins["extends"]["run"][pluginspec["name"]] = importlib.import_module(v, path)
+                if k == "install":
+                    plugins["extends"]["install"][pluginspec["name"]] = importlib.import_module(v, path)
+                if k == "remove":
+                    plugins["extends"]["remove"][pluginspec["name"]] = importlib.import_module(v, path)
+    return plugins
+        
+PLUGINS = load_plugins()
 
 def getpkginfo(packagename: str) -> dict | None:
     pkgpath = os.path.join(APP_DIR, packagename)
@@ -147,7 +181,7 @@ def install(filepath, ask_for_replace: bool = False):
         shutil.copytree(filepath, package_folder, symlinks=True)
     info_files = list(pathlib.Path(package_folder).rglob("boundaries.json"))
     if len(info_files) != 1:
-        print(f"{QUOTE_SYMBOL_ERROR}pathlib did not found exactly one infofile{QUOTE_SYMBOL_ERROR}")
+        print(f"{QUOTE_SYMBOL_ERROR}pathlib did not find exactly one infofile{QUOTE_SYMBOL_ERROR}")
         return False
     package_folder = os.path.dirname(str(info_files[0].resolve()))
     infofile = os.path.join(package_folder, "boundaries.json")
@@ -180,7 +214,9 @@ def install(filepath, ask_for_replace: bool = False):
     if not os.path.exists(os.path.join(VAR_DIR, pkg_name)):
         print(f"{QUOTE_SYMBOL_DOING}Creating Data Directory{QUOTE_SYMBOL_DOING}")
         pathlib.Path(os.path.join(VAR_DIR, pkg_name)).mkdir()
-
+    for k, v in PLUGINS["extends"]["install"].items():
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_DOING}Running Plugin {k}{QUOTE_SYMBOL_DOING}")
+        v.execute(package_folder, info)
     if "de_name" in info:
         de_name = info["de_name"]
     else:
