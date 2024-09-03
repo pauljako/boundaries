@@ -1,4 +1,5 @@
 /apps/[!boundaries]
+/apps/boundaries/__pycache__
 /apps/krita
 /apps/onlyoffice
 /apps/bnd-repo
