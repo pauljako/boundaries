@@ -75,6 +75,11 @@ def load_plugins() -> dict:
                     plugins["extends"]["install"][pluginspec["name"]] = importlib.import_module(v, path)
                 if k == "remove":
                     plugins["extends"]["remove"][pluginspec["name"]] = importlib.import_module(v, path)
+        if "custom" in pluginspec:
+            for k, v in pluginspec["custom"].items():
+                if pluginspec["name"] not in plugins["custom"]:
+                    plugins["custom"][pluginspec["name"]] = {}
+                plugins["custom"][pluginspec["name"]][k] = importlib.import_module(v, path)
     return plugins
         
 PLUGINS = load_plugins()
@@ -126,6 +131,9 @@ def listpkgs():
 
 def remove(filename, keep_data=False):
     info = getpkginfo(filename)
+    for k, v in PLUGINS["extends"]["remove"].items():
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_DOING}Running Plugin {k}{QUOTE_SYMBOL_DOING}")
+        v.execute(filename, info, keep_data)
     print(f"{QUOTE_SYMBOL_DOING}Removing Files of {info['name']}{QUOTE_SYMBOL_DOING}")
     shutil.rmtree(os.path.join(APP_DIR, filename))
     if not keep_data:
@@ -162,6 +170,9 @@ def run(filename, app_args, target: str = "run"):
     var_folder = os.path.join(VAR_DIR, filename)
     if info is None:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find the boundaries.json file{QUOTE_SYMBOL_ERROR}")
+    for k, v in PLUGINS["extends"]["run"].items():
+        if not SIMPLE: print(f"{QUOTE_SYMBOL_DOING}Running Plugin {k}{QUOTE_SYMBOL_DOING}")
+        v.execute(package_folder, info)
     run_command = f"APP_DIR={package_folder} VAR_DIR={var_folder} "
     run_command = run_command + os.path.realpath(os.path.join(package_folder, info["command"][target]))
     for a in app_args:
