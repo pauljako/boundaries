@@ -31,19 +31,21 @@ if os.path.exists(os.path.expanduser("~/.bndpath")):
     with open(os.path.expanduser("~/.bndpath"), "r") as file:
         path = file.readline().strip().replace("\n", "")
         if os.path.exists(os.path.expanduser(path)):
-            BND_DIR = os.path.realpath(os.path.join(os.path.expanduser(path), "apps"))
+            BND_DIR = os.path.realpath(os.path.expanduser(path))
         else:
             print(f"{QUOTE_SYMBOL_ERROR}The path {path} does not exist. Please fix your ~/.bndpath file. Using default{QUOTE_SYMBOL_ERROR}")
             BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/apps")), "."))
-else:
-    BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries/apps")), "."))
+elif os.path.exists(os.path.expanduser("~/boundaries")):
+    BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries")), "."))
+elif os.path.exists("/opt/boundaries"):
+    BND_DIR = os.path.realpath(os.path.join(os.path.realpath("/opt/boundaries"), "."))
 
-APP_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "apps"))
-EXEC_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "exec"))
-VAR_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "var"))
-PLUGIN_DIR = os.path.realpath(os.path.join(os.path.join(BND_DIR, ".."), "plugins"))
-BND_DIR = os.path.realpath(os.path.join(APP_DIR, "boundaries"))
-with open(os.path.realpath(os.path.join(BND_DIR, "boundaries.json")), "rb") as f:
+APP_DIR = os.path.realpath(os.path.join(BND_DIR, "apps"))
+EXEC_DIR = os.path.realpath(os.path.join(BND_DIR, "exec"))
+VAR_DIR = os.path.realpath(os.path.join(BND_DIR, "var"))
+PLUGIN_DIR = os.path.realpath(os.path.join(BND_DIR, "plugins"))
+THIS_DIR = os.path.realpath(os.path.join(APP_DIR, "boundaries"))
+with open(os.path.realpath(os.path.join(THIS_DIR, "boundaries.json")), "rb") as f:
     VERSION = json.load(f)["version"]
 
 
@@ -240,7 +242,7 @@ def install(filepath, ask_for_replace: bool = False):
         else:
             startup_wm_class = ""
         with open(desktop_path, "w") as f:
-            d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(BND_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false;\nType=Application;\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class};"
+            d = f"[Desktop Entry]\nName={de_name}\nExec={os.path.join(THIS_DIR, 'main.py')} run \"{pkg_name}\"\nIcon={os.path.join(package_folder, info['icon'])}\nTerminal=false;\nType=Application;\nCategories=boundaries;\nStartupNotify=true;\nPath={package_folder}{startup_wm_class};"
             f.write(d)
         print(f"{QUOTE_SYMBOL_DOING}Making Desktop Entry Executable{QUOTE_SYMBOL_DOING}")
         os.system(f'chmod +x {desktop_path}')
@@ -251,7 +253,7 @@ def install(filepath, ask_for_replace: bool = False):
             print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin']}{QUOTE_SYMBOL_DOING}")
             binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin']}")
             with open(binpath, "w") as f:
-                d = f'{os.path.join(BND_DIR, "main.py")} run --target \"run\" \"{pkg_name}\" $@'
+                d = f'{os.path.join(THIS_DIR, "main.py")} run --target \"run\" \"{pkg_name}\" $@'
                 f.write(d)
             print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
             os.system(f'chmod +x {binpath}')
@@ -260,7 +262,7 @@ def install(filepath, ask_for_replace: bool = False):
                 print(f"{QUOTE_SYMBOL_DOING}Creating Command {info['bin'][target]} for target {target}{QUOTE_SYMBOL_DOING}")
                 binpath = os.path.realpath(f"{EXEC_DIR}/bin/{info['bin'][target]}")
                 with open(binpath, "w") as f:
-                    d = f'{os.path.join(BND_DIR, "main.py")} run --target \"{target}\" \"{pkg_name}\" $@'
+                    d = f'{os.path.join(THIS_DIR, "main.py")} run --target \"{target}\" \"{pkg_name}\" $@'
                     f.write(d)
                 print(f"{QUOTE_SYMBOL_DOING}Making Command Executable{QUOTE_SYMBOL_DOING}")
                 os.system(f'chmod +x {binpath}')

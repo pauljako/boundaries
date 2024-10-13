@@ -20,6 +20,7 @@
 /exec
 /sandbox
 /.idea
+/.vscode
 /var
 /bin
 /plugins
