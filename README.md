@@ -42,14 +42,14 @@ The File has to have at least two entries:
 1. name: The name of the package. name cannot contain spaces nor uppercase letters.
 2. command{run}: command is a Dictionary, which contains commands for certain things. the run command specifies the path to the executable that executes the Program.
 
-There are many other not necessary entries. A full list can be found [here](../main/JSONFILE.md)
+There are many other not necessary entries. A full list can be found [here](JSONFILE.md)
 
 # Working Platforms
 
 | Platform / OS   | Version                   | Status      | Notes                                                  |
 |-----------------|---------------------------|-------------|--------------------------------------------------------|
-| NixOS           | -                         | Not Working | May Work, but additional tweaking is required          |
-| Fedora          | 39                        | Working     | -                                                      |
+| NixOS           | -                         | Working     | Most packages will not work on NixOS                   |
+| Fedora          | 40                        | Working     | -                                                      |
 | Arch Linux      | -                         | Working     | -                                                      |
 | Ubuntu          | 22.04.4 (Jammy Jellyfish) | Working     | -                                                      |
 | Debian          | 12.5 (Bookworm)           | Working     | -                                                      |
