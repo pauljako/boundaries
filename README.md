@@ -10,29 +10,11 @@ Yet another useless Package Manager for Linux. It uses archives of the applicati
 - Print Help: `boundaries -h`
 
 # Installation
-### Step 1:
-Install the following dependencies:
 
-- git
-- curl
-- python3 (3.7+, must be in /bin/python3)
-- bash (must be in /bin/bash)
-
-Or just run one of these commands:
-
-- Arch Linux:
-`pacman -S git curl python3 bash`
-- Debian / Ubuntu:
-`apt install git curl python3 bash`
-- Fedora:
-`dnf install git curl python3 bash`
-
-### Step 2:
 Use the following Line to run the Installer (one line):
 `bash <(curl -s https://raw.githubusercontent.com/pauljako/boundaries/main/install.sh)`
 
-Or run the legacy installer using the following command (one line):
-`/bin/python3 <(curl -s https://raw.githubusercontent.com/pauljako/boundaries/main/install.py)`
+More information can be found [here](INSTALL.md)
 
 # Update from an older Version
 Since Version 0.8.6 it is possible do directly Update boundaries. Just download the Repository and install with the following Command:

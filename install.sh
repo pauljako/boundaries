@@ -30,32 +30,25 @@ get_ins_loc() {
     echo "----"
     echo "Where do you want to install it?"
     echo "1) ~/boundaries (recommended)"
-    echo "2) /usr/boundaries (system wide)"
-    echo "3) Somewhere different"
+    echo "2) /opt/boundaries (system wide)"
     echo "----"
     read -r -p "> " ins_loc
     if [ "$ins_loc" = "1" ]; then
         loc="$HOME/boundaries"
     elif [ "$ins_loc" = "2" ]; then
-	loc="/usr/boundaries"
-    elif [ "$ins_loc" = "3" ]; then
-        echo "----"
-        echo "Enter the Absolute Path"
-        echo "----"
-        read -r -p "> " tmp_loc
-        if [ -z "$tmp" ]; then
+        if [ "$UID"  = "0" ]; then
+            loc="/opt/boundaries"
+	    else
             echo "----"
-            echo "Error. Please enter a Path"
+            echo "Error. You need to run this as root"
             get_ins_loc
-        else
-            loc=$(realpath "$tmp_loc")
         fi
     else
         get_ins_loc
     fi
     if [ -d "$loc" ]; then
         echo "----"
-        echo "Error. Location already Exists"
+        echo "Error. Location already exists"
         get_ins_loc
     fi
 
@@ -65,13 +58,13 @@ get_ins_loc
 
 echo "----"
 echo "boundaries will be installed into $loc"
-echo "Press Enter to continue"
+echo "Press enter to continue"
 echo "----"
 read -p "> " -r con
 echo "----"
 mkdir -p "$loc" # &> /dev/null
 if [ ! -d "$loc" ]; then
-    echo "Failed to create the Directory"
+    echo "Failed to create directory"
     echo "Aborting"
     exit 1
 fi
