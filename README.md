@@ -46,16 +46,16 @@ There are many other not necessary entries. A full list can be found [here](JSON
 
 # Working Platforms
 
-| Platform / OS   | Version                   | Status      | Notes                                                  |
-|-----------------|---------------------------|-------------|--------------------------------------------------------|
-| NixOS           | -                         | Working     | Most packages will not work on NixOS                   |
-| Fedora          | 40                        | Working     | -                                                      |
-| Arch Linux      | -                         | Working     | -                                                      |
-| Ubuntu          | 22.04.4 (Jammy Jellyfish) | Working     | -                                                      |
-| Debian          | 12.5 (Bookworm)           | Working     | -                                                      |
-| Raspberry Pi OS | 11 (Buster)               | Working     | -                                                      |
-| Alpine Linux    | 3.19.1                    | Working     | /bin/python3 needs to be a Symlink to /usr/bin/python3 |
-| OpenSUSE        | Tumbleweed                | Working     | -                                                      |
+| Platform / OS   | Version                   | Status      | Notes                                                          |
+|-----------------|---------------------------|-------------|--------------------------------------------------------        |
+| NixOS           | -                         | Working     | Everything works perfectly/better because NixOS is the BestOS  |
+| Fedora          | 40                        | Working     | -                                                              |
+| Arch Linux      | -                         | Working     | -                                                              |
+| Ubuntu          | 22.04.4 (Jammy Jellyfish) | Working     | -                                                              |
+| Debian          | 12.5 (Bookworm)           | Working     | -                                                              |
+| Raspberry Pi OS | 11 (Buster)               | Working     | -                                                              |
+| Alpine Linux    | 3.19.1                    | Working     | /bin/python3 needs to be a Symlink to /usr/bin/python3         |
+| OpenSUSE        | Tumbleweed                | Working     | -                                                              |
 
 #### Please Report any issues
 
