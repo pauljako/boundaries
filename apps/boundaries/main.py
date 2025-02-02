@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import os
 import pathlib
+import re
 import sys
 import shutil
 import json
 import argparse
 import importlib
-
+import logging
 
 class Colors:
     HEADER = '\033[95m'
@@ -27,6 +28,21 @@ QUOTE_SYMBOL_ERROR = f" {Colors.BOLD}{Colors.FAIL}::{Colors.ENDC} "
 QUOTE_SYMBOL_OUTPUT = f" {Colors.BOLD}{Colors.OKBLUE}::{Colors.ENDC} "
 SIMPLE = False
 
+def error(msg: str):
+    print(f"{QUOTE_SYMBOL_ERROR}{msg}{QUOTE_SYMBOL_ERROR}")
+
+def doing(msg: str):
+    print(f"{QUOTE_SYMBOL_DOING}{msg}{QUOTE_SYMBOL_DOING}")
+
+def warning(msg: str):
+    print(f"{QUOTE_SYMBOL_WARNING}{msg}{QUOTE_SYMBOL_WARNING}")
+
+def info(msg: str):
+    print(f"{QUOTE_SYMBOL_INFO}{msg}{QUOTE_SYMBOL_INFO}")
+
+def output(msg: str):
+    print(f"{QUOTE_SYMBOL_OUTPUT}{msg}{QUOTE_SYMBOL_OUTPUT}")
+
 if os.path.exists(os.path.expanduser("~/.bndpath")):
     with open(os.path.expanduser("~/.bndpath"), "r") as file:
         path = file.readline().strip().replace("\n", "")
@@ -39,6 +55,9 @@ elif os.path.exists(os.path.expanduser("~/boundaries")):
     BND_DIR = os.path.realpath(os.path.join(os.path.realpath(os.path.expanduser("~/boundaries")), "."))
 elif os.path.exists("/opt/boundaries"):
     BND_DIR = os.path.realpath(os.path.join(os.path.realpath("/opt/boundaries"), "."))
+else:
+    print(f"{QUOTE_SYMBOL_ERROR}The boundaries path could not be determined.{QUOTE_SYMBOL_ERROR}")
+    sys.exit(1)
 
 APP_DIR = os.path.realpath(os.path.join(BND_DIR, "apps"))
 EXEC_DIR = os.path.realpath(os.path.join(BND_DIR, "exec"))
@@ -67,7 +86,7 @@ def load_plugins() -> dict:
             break
         with open(os.path.join(path, "plugin.json"), "rb") as f:
             pluginspec = json.load(f)
-        if ("name" not in pluginspec):
+        if "name" not in pluginspec:
             break
         if "extends" in pluginspec:
             for k, v in pluginspec["extends"].items():
@@ -83,7 +102,7 @@ def load_plugins() -> dict:
                     plugins["custom"][pluginspec["name"]] = {}
                 plugins["custom"][pluginspec["name"]][k] = importlib.import_module(v, path)
     return plugins
-        
+
 PLUGINS = load_plugins()
 
 def getpkginfo(packagename: str) -> dict | None:
@@ -182,7 +201,7 @@ def run(filename, app_args, target: str = "run"):
     os.system(run_command)
 
 
-def install(filepath, ask_for_replace: bool = False):
+def install(filepath: str, ask_for_replace: bool = False):
     filepath = os.path.realpath(os.path.join(os.getcwd(), filepath))
     package_folder = os.path.join("/tmp", "boundaries")
     if os.path.exists(package_folder):
@@ -224,6 +243,22 @@ def install(filepath, ask_for_replace: bool = False):
     else:
         print(f"{QUOTE_SYMBOL_ERROR}Cannot find {infofile}{QUOTE_SYMBOL_ERROR}")
         return False
+    if "dependencies" in info:
+        if "commands" in info["dependencies"]:
+            for command in info["dependencies"]["commands"]:
+                if shutil.which(command) is None:
+                    error(f"The command {command} could not be found in your path, but is a dependency of {pkg_name}")
+                    return False
+        if "packages" in info["dependencies"]:
+            installed = get_packages()
+            for package, version in info["dependencies"]["packages"].items():
+                if package not in installed:
+                    error(f"The package {package} is not installed, but is a dependency of {pkg_name}")
+                    return False
+                if version != "*" and ("version" not in getpkginfo(package) or not re.fullmatch(version, getpkginfo(package)["version"])):
+                    error(f"The version of package {package} does not match {version}, but is a dependency of {pkg_name}")
+                    return False
+
     if not os.path.exists(os.path.join(VAR_DIR, pkg_name)):
         print(f"{QUOTE_SYMBOL_DOING}Creating Data Directory{QUOTE_SYMBOL_DOING}")
         pathlib.Path(os.path.join(VAR_DIR, pkg_name)).mkdir()
@@ -306,7 +341,7 @@ if __name__ == '__main__':
     list_parser = sub_parser.add_parser("list", help="List installed Packages")
 
     args = parser.parse_args()
-    
+
     SIMPLE = args.simple
     if SIMPLE:
         QUOTE_SYMBOL_DOING = QUOTE_SYMBOL_WARNING = QUOTE_SYMBOL_INFO = QUOTE_SYMBOL_ERROR = QUOTE_SYMBOL_OUTPUT = ""
